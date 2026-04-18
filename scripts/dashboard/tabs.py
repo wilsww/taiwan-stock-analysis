@@ -149,7 +149,7 @@ def render_scrubber(ctx: TabContext) -> None:
             yaxis=dict(autorange="reversed", gridcolor=GRID_COLOR),
             showlegend=False,
         )
-        st.plotly_chart(fig_scrub, use_container_width=True)
+        st.plotly_chart(fig_scrub, width="stretch")
 
 
 def render_tab1(ctx: TabContext) -> None:
@@ -523,8 +523,8 @@ def render_tab5(ctx: TabContext) -> None:
         num_fmt_str = "{:+,.2f}" if params.unit == "value_oku" else "{:+,.0f}"
         fmt = {c: (lambda v, _f=num_fmt_str: _f.format(v)) for c in num_cols}
         st.dataframe(
-            chg_df.style.format(fmt).applymap(_style_num_col, subset=num_cols),
-            use_container_width=True, hide_index=True,
+            chg_df.style.format(fmt).map(_style_num_col, subset=num_cols),
+            width="stretch", hide_index=True,
         )
     else:
         st.caption("兩期間無變化")
@@ -557,8 +557,8 @@ def render_tab5(ctx: TabContext) -> None:
         if hhi_by_ticker:
             hhi_df = pd.DataFrame(hhi_by_ticker).sort_values("HHI", ascending=False)
             st.dataframe(
-                hhi_df.style.format({"HHI": "{:,.0f}"}).applymap(_hhi_bg, subset=["HHI"]),
-                use_container_width=True, hide_index=True,
+                hhi_df.style.format({"HHI": "{:,.0f}"}).map(_hhi_bg, subset=["HHI"]),
+                width="stretch", hide_index=True,
             )
         else:
             st.caption("無有效分點資料可計算 HHI")
@@ -590,7 +590,7 @@ def render_tab5(ctx: TabContext) -> None:
                 xaxis=dict(tickangle=-45),
                 margin=dict(t=40, b=120, l=120, r=20),
             )
-            st.plotly_chart(fig_corr, use_container_width=True)
+            st.plotly_chart(fig_corr, width="stretch")
         else:
             st.caption("需要至少 2 個有效類股才能計算相關性")
 
@@ -676,7 +676,7 @@ def render_tab6(ctx: TabContext) -> None:
         yaxis3=dict(title="融券餘額（張）", gridcolor=GRID_COLOR, tickformat=","),
         legend=dict(orientation="h", yanchor="bottom", y=1.03, xanchor="left", x=0),
     )
-    st.plotly_chart(fig6, use_container_width=True)
+    st.plotly_chart(fig6, width="stretch")
 
     div_days = sum(1 for m, i in zip(mg_chg, inst_net) if (m > 0 and i < 0) or (m < 0 and i > 0))
     sync_days = sum(1 for m, i in zip(mg_chg, inst_net) if (m > 0 and i > 0) or (m < 0 and i < 0))
@@ -738,7 +738,7 @@ def render_tab7(ctx: TabContext) -> None:
             xaxis=dict(title="買超（張）", tickformat=",", gridcolor=GRID_COLOR, zeroline=True, zerolinecolor=NEU_ZERO_COLOR),
             showlegend=False,
         )
-        st.plotly_chart(fig_b, use_container_width=True)
+        st.plotly_chart(fig_b, width="stretch")
 
         st.subheader("前 15 大賣超券商")
         bot = agg.tail(15).iloc[::-1]
@@ -756,7 +756,7 @@ def render_tab7(ctx: TabContext) -> None:
             xaxis=dict(title="賣超（張）", tickformat=",", gridcolor=GRID_COLOR, zeroline=True, zerolinecolor=NEU_ZERO_COLOR),
             showlegend=False,
         )
-        st.plotly_chart(fig_s, use_container_width=True)
+        st.plotly_chart(fig_s, width="stretch")
 
     with col2:
         st.subheader("券商 → 成員股分佈")
@@ -780,7 +780,7 @@ def render_tab7(ctx: TabContext) -> None:
                 textinfo="label",
             ))
             fig_tm.update_layout(height=540, margin=dict(t=20, b=20, l=10, r=10))
-            st.plotly_chart(fig_tm, use_container_width=True)
+            st.plotly_chart(fig_tm, width="stretch")
         else:
             st.caption("該券商無個股資料")
 
@@ -838,7 +838,7 @@ def render_tab8(ctx: TabContext) -> None:
         yaxis=dict(title=f"{cid} 淨多空口數", tickformat=",", gridcolor=GRID_COLOR, zeroline=True, zerolinecolor=NEU_ZERO_COLOR),
         legend=dict(orientation="h", yanchor="bottom", y=1.03, xanchor="left", x=0),
     )
-    st.plotly_chart(fig_fut, use_container_width=True)
+    st.plotly_chart(fig_fut, width="stretch")
 
     latest_day = pivot.index[-1]
     latest = pivot.iloc[-1]
@@ -937,8 +937,8 @@ def render_detail(ctx: TabContext) -> None:
             d_fmt_str = "{:+,.2f}" if params.unit == "value_oku" else "{:+,.0f}"
             fmt_d = {c: (lambda v, _f=d_fmt_str: _f.format(v)) for c in num_cols_d}
             st.dataframe(
-                detail_df.style.format(fmt_d).applymap(_style_num_col, subset=num_cols_d),
-                use_container_width=True, hide_index=True,
+                detail_df.style.format(fmt_d).map(_style_num_col, subset=num_cols_d),
+                width="stretch", hide_index=True,
             )
             st.caption("外資／投信／自營欄位為類股級別合計；個股合計為該股票全期三大法人買賣超加總。")
         else:

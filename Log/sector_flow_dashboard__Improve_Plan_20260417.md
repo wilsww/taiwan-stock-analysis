@@ -2,8 +2,8 @@
 
 > 目標：在**維持現有功能、視覺輸出、數值結果完全一致**的前提下，對 `scripts/sector_flow_dashboard.py`（Phase A+B 完成後 2016 行，Phase A 前 2022 行）做結構、效能、可讀性重構。
 > 範圍：純重構，不新增 feature、不改 UI、不改 Plotly 視覺。
-> 狀態：2026-04-18 擬定；Phase A+B+C 已實作（見 §6）；Phase D 為 AI agent 執行規格
-> 版本：1.3
+> 狀態：2026-04-18 擬定；Phase A+B+C 已實作（見 §6）；Phase D 已完成 D1 + D2-A + D2-B + D2-C，人工確認已完成，並已做 optional cleanup（見 §6，待與文件一併提交）
+> 版本：1.7
 
 ---
 
@@ -922,12 +922,50 @@ Phase D  (D1 → D2)   ── 可選，最後做
 | B3 | 抽離模組常數 `_PANEL_CSS` / `_PANEL_JS_HELPERS`（`orderedCatsForLabel` + `tab3TotalMeta`）/ `_PANEL_VLINE_JS`（`setVLine` + hover / unhover handler）；原本 `render_chart_with_panel` 內超大 f-string 改為 `_script_head` / `_script_trace_fix` / `_script_tab_mode` / `_script_plot` / `_script_panel_wire` 幾段 concat。Script 執行順序（head → helpers → trace fix → tab_mode → plot → panel_js → build_panel_js → wire + init → vline）完整保留；JS 變數作用域維持原樣（`POS_COLOR` 等在 `panel_js` 中宣告，於 helper 呼叫時已存在）。 |
 | B4 | `LAYOUT_BASE` 新增標頭註解說明 Tab1/2 直接套用預設 `legend`，Tab3/4/6/8 客製 override 的原因；不改 layout 資料結構。 |
 
-### 延伸建議
+### Phase D — working tree（D1 / D2-A / D2-B / D2-C 已實作；人工確認與 cleanup 已完成，待提交）
 
-- Phase C 等價性已用 fixture 單元驗證；視覺 / DB query 次數仍待人工 `streamlit run` 回歸（勾選融資融券，確認 `📊 融資-法人 背離天數` metric 與 `5a1a48a` baseline 相同）。
-- 進 Phase D 前建議先 checkout `1a0a48d` 產生 baseline 截圖（Tab1–Tab8 + scrubber + sidebar + alerts 四格），作為 D1 / D2 視覺比對標準。
-- Phase D 須獨立開分支（`refactor/phase-d1`、`refactor/phase-d2`），因為 `st.session_state` 存取與 tab rendering 順序敏感。
+| STEP | 實際改動 |
+|------|---------|
+| D1 | 新增 `@dataclass(frozen=True) class SidebarParams` 與 `render_sidebar()`；原頂層 `with st.sidebar:` 區塊整段搬入函式內，保留原 widget 預設值、`st.session_state["_qs"]` / `["_qe"]` / `["last_update"]` key、`st.stop()` / `st.rerun()` 行為與按鈕副作用。模組頂層新增 `params = render_sidebar()` 與相容層解包，後段資料載入 / alerts / tabs 暫仍沿用既有模組層變數，符合 D1「只包 sidebar、不動下游邏輯」原則。 |
+| D2-A | 新增 `scripts/dashboard/__init__.py`、`scripts/dashboard/helpers.py`、`scripts/dashboard/panels.py`。色票常數、`LAYOUT_BASE`、missing marker / xaxis / style helpers 搬至 `dashboard/helpers.py`；`_PANEL_CSS` / `_PANEL_JS_HELPERS` / `_PANEL_VLINE_JS` / `render_chart_with_panel` / `build_panel_data` 搬至 `dashboard/panels.py`。`build_panel_data(tab_mode, period_labels, cat_list, period_data)` 改為顯式接收資料相依；`render_chart_with_panel(..., *, unit, unit_suffix, ...)` 改為顯式接收顯示單位相依。主檔改以 `from dashboard.helpers ...`、`from dashboard.panels ...` import，Tab1-Tab4 呼叫點全部補上新參數；`period_data` / `panel_data` schema 未改。 |
+| D2-B | 新增 `@dataclass(frozen=True) class AppData` 與 `load_app_data(params)`，把原本主檔資料載入、副作用、自動補抓、`active_tickers` / `trading_dates` / `cat_colors` / `coverage_json` / `panel_tab1-4` 預算全部集中於單一資料流。原 D1 相容層（`start_date = params.start_date` 等模組層解包）已刪除；主流程改為 `main()` 統一 orchestrate `render_sidebar()` → `load_app_data()` → alerts / scrubber / tabs / detail。Tab1-Tab8 與個股明細仍留在主檔 inline，但讀取來源已改為 `params.*` / `data.*`；`st.session_state` 僅保留於 `render_sidebar()` 與 `load_app_data()`。 |
+| D2-C | 新增 `scripts/dashboard/data.py` 與 `scripts/dashboard/tabs.py`。`dashboard/data.py` 收斂 `cached_load_universe()`、`_cached_latest_date()`、`load_data()`，並補上 `load_trading_dates(start_date, end_date)`，讓主檔不再直接依賴 `sector_flow.trading_dates_in_range()`；`dashboard/tabs.py` 新增 `TabContext`，將 `render_alerts()`、`render_scrubber()`、`render_tab1()`~`render_tab8()`、`render_detail()` 全部移出主檔，統一以 `ctx.params` / `ctx.data` 讀取資料。主檔 `main()` 現在只負責 orchestration：建立 `ctx = TabContext(params=params, data=data)`、組 tabs、依條件呼叫 `render_tab6/7/8()`、最後呼叫 `render_detail(ctx)`。`st.session_state` 搜尋結果已只剩主檔 sidebar / data-load 路徑；`scripts/sector_flow_dashboard.py` 行數收斂至 466 行，達成「主檔只保留入口與流程控制」目標。另將 `_unit_scale()` / `_key_for_unit()` 正式留在 `dashboard/helpers.py`，供 `data.py` 與 `tabs.py` 共用。 |
+
+Phase D 驗證結果（截至 D2-C）：
+
+- `python3 -m py_compile scripts/sector_flow_dashboard.py scripts/dashboard/helpers.py scripts/dashboard/panels.py scripts/dashboard/tabs.py scripts/dashboard/data.py`：通過
+- `python3 -c "import importlib; importlib.import_module('scripts.sector_flow_dashboard')"`：通過
+- `rg -n "st\\.session_state" scripts/dashboard scripts/sector_flow_dashboard.py -S`：`scripts/dashboard/*` 無結果，僅主檔保留 sidebar / auto-fetch / db init 所需 state
+- 行數統計：`scripts/sector_flow_dashboard.py` 466、`scripts/dashboard/tabs.py` 945、`scripts/dashboard/panels.py` 358、`scripts/dashboard/helpers.py` 332、`scripts/dashboard/data.py` 96
+
+人工確認結果（Phase D 完成後）：
+
+- 已完成 `streamlit run` 情境下的人工確認，確認本次結構拆分後 dashboard 可正常操作
+- 已確認項目涵蓋：Tab1-Tab8 顯示、hover panel、快速區間 / 更新資料按鈕 rerun、Tab6-Tab8 條件顯示、scrubber 單期 snapshot、個股明細 expander
+- 因此 Phase D 剩餘風險已由「功能/畫面是否回歸」收斂為「既有 framework/API warning 是否另案清理」
+
+### Optional Cleanup — working tree（已實作，待與文件一併提交）
+
+| 項目 | 實際改動 |
+|------|---------|
+| Streamlit width API cleanup | [scripts/sector_flow_dashboard.py](/Users/wayne/Desktop/Invest/taiwan-stock-analysis/scripts/sector_flow_dashboard.py) 內 sidebar 按鈕 `st.button(..., use_container_width=True)` 全部改為 `width="stretch"`；[scripts/dashboard/tabs.py](/Users/wayne/Desktop/Invest/taiwan-stock-analysis/scripts/dashboard/tabs.py) 內 `st.plotly_chart(...)` / `st.dataframe(...)` 的 `use_container_width=True` 亦全部改為 `width="stretch"`。此修改屬 API 對應寫法更新，不改元件寬度語意。 |
+| pandas Styler cleanup | [scripts/dashboard/tabs.py](/Users/wayne/Desktop/Invest/taiwan-stock-analysis/scripts/dashboard/tabs.py) 內 `Styler.applymap(...)` 全部改為 `Styler.map(...)`，對應位置包含 Tab5 變化率表、HHI 表與個股明細表。這些欄位樣式函式 `_style_num_col` / `_hhi_bg` 均維持原回傳 CSS 字串行為，不改顏色或格式化結果。 |
+
+Optional cleanup 驗證結果：
+
+- `rg -n "applymap|use_container_width" scripts/sector_flow_dashboard.py scripts/dashboard -S`：無結果
+- `python3 -m py_compile scripts/sector_flow_dashboard.py scripts/dashboard/helpers.py scripts/dashboard/panels.py scripts/dashboard/tabs.py scripts/dashboard/data.py`：通過
+- `python3 -c "import importlib; importlib.import_module('scripts.sector_flow_dashboard')"`：通過
+- 原先文件記錄的兩類 deprecation（`Styler.applymap`、`use_container_width`）已清除
+- bare import 仍會看到既有 Streamlit bare mode 警告；另外新浮出一則 Plotly 相關 warning：`The keyword arguments have been deprecated and will be removed in a future release. Use config instead to specify Plotly configuration options.`，顯示仍有 `st.plotly_chart(...)` 的舊式 keyword 使用路徑尚未清理，但這不屬於本輪既定 optional cleanup 範圍
+
+### 延伸評估說明
+
+- Phase C 的邏輯等價性已由 fixture 單元驗證覆蓋，且 Phase D 的互動/畫面面已完成人工確認；因此本次重構主體可視為已完成，剩餘事項已從「功能正確性」轉為「框架 API 與 warning 清理」層級。
+- 以結構面評估，目前主檔已收斂為 sidebar / data-load / main orchestration，`dashboard/helpers.py` / `dashboard/panels.py` / `dashboard/data.py` / `dashboard/tabs.py` 的責任邊界清楚，這個 working tree 已足以作為新的維護 baseline。
+- 本輪 optional cleanup 已消除 `Styler.applymap` 與 `use_container_width` 兩類已知 deprecation，說明拆分後的模組邊界足以支撐低風險 API 升級，而不需要再回到 2000 行主檔進行大面積修改。
+- 目前仍可觀察到一則 Plotly `config` 相關 warning。從風險角度看，這屬於後續相容性整理，而非本次重構導入的功能風險；若要處理，建議另開獨立 cleanup commit，避免把 warning 消除與已完成的 Phase D 重構混為同一個驗證範圍。
 
 ---
 
-版本：1.3 | 2026-04-18
+版本：1.7 | 2026-04-18

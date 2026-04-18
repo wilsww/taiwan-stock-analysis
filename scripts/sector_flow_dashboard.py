@@ -110,7 +110,7 @@ def render_sidebar() -> SidebarParams:
         _quick_cols = st.columns(4)
         _quick_map = {"30天": 30, "90天": 90, "半年": 180, "今年": None}
         for _i, (_ql, _qv) in enumerate(_quick_map.items()):
-            if _quick_cols[_i].button(_ql, use_container_width=True, key=f"quick_{_ql}"):
+            if _quick_cols[_i].button(_ql, width="stretch", key=f"quick_{_ql}"):
                 if _qv:
                     st.session_state["_qs"] = (_today - timedelta(days=_qv)).isoformat()
                 else:
@@ -175,7 +175,7 @@ def render_sidebar() -> SidebarParams:
         with st.expander("🏦 券商分點"):
             _broker_auto = st.checkbox("顯示 Tab 7：券商動向", value=False,
                                         help="顯示類股級別前 15 大券商排行。需先抓分點資料。")
-            if _broker_auto and st.button("📥 抓取今日分點（HiStock）", use_container_width=True):
+            if _broker_auto and st.button("📥 抓取今日分點（HiStock）", width="stretch"):
                 _, _b_tkrs, _, _ = cached_load_universe(tier)
                 with st.spinner(f"抓取 {len(_b_tkrs)} 檔分點（預估 {len(_b_tkrs)*2.5/60:.1f} 分鐘）..."):
                     try:
@@ -189,7 +189,7 @@ def render_sidebar() -> SidebarParams:
         with st.expander("📉 散戶情緒（融資融券）"):
             _margin_auto = st.checkbox("顯示 Tab 6：散戶情緒", value=False,
                                         help="勾選後自動補抓融資融券資料（TWSE MI_MARGN + TPEx margin_bal）")
-            if _margin_auto and st.button("🔄 補抓融資融券", use_container_width=True):
+            if _margin_auto and st.button("🔄 補抓融資融券", width="stretch"):
                 st.cache_data.clear()
                 _, _m_tkrs, _, _ = cached_load_universe(tier)
                 with st.spinner("補抓融資融券..."):
@@ -202,7 +202,7 @@ def render_sidebar() -> SidebarParams:
                 st.rerun()
 
         with st.expander("🔄 更新資料 / 資料新鮮度"):
-            if st.button("從 TWSE 補抓缺漏日期", use_container_width=True):
+            if st.button("從 TWSE 補抓缺漏日期", width="stretch"):
                 st.cache_data.clear()
                 with st.spinner("補抓中..."):
                     _, all_tickers, _, _ = cached_load_universe(tier)  # noqa: cache hit
