@@ -518,18 +518,26 @@ def _render_alerts():
         try:
             _m_db = load_margin_from_db(_trading_dates)
             if _m_db:
-                _by_date_a = {}
+                _by_date_a: dict[str, float] = {}
                 for (tk, dt), v in _m_db.items():
                     if tk not in active_tickers:
                         continue
-                    slot = _by_date_a.setdefault(dt, [0, 0])
-                    slot[0] += (v.get("margin_balance", 0) or 0) - (v.get("margin_prev", 0) or 0)
+                    _by_date_a[dt] = _by_date_a.get(dt, 0.0) + (
+                        (v.get("margin_balance", 0) or 0)
+                        - (v.get("margin_prev", 0) or 0)
+                    )
+
+                # 一次批次查法人資料，按日期聚合
+                _i_db_all = load_from_db(sorted(_by_date_a.keys())) if _by_date_a else {}
+                _inst_net_by_date: dict[str, float] = {}
+                for (tk, dt), v in _i_db_all.items():
+                    if tk not in active_tickers:
+                        continue
+                    _inst_net_by_date[dt] = _inst_net_by_date.get(dt, 0.0) + v.get("total", 0)
+
                 _div = 0
-                for dt in sorted(_by_date_a.keys()):
-                    m_chg = _by_date_a[dt][0]
-                    # 當日法人合計（股）
-                    i_db = load_from_db([dt])
-                    i_net = sum(v.get("total", 0) for (tk, _d), v in i_db.items() if tk in active_tickers)
+                for dt, m_chg in _by_date_a.items():
+                    i_net = _inst_net_by_date.get(dt, 0.0)
                     if (m_chg > 0 and i_net < 0) or (m_chg < 0 and i_net > 0):
                         _div += 1
                 _a3.metric("📊 融資-法人 背離天數", f"{_div}")
