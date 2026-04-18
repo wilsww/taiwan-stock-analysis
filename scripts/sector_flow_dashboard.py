@@ -56,6 +56,17 @@ POS_COLOR = "#ef4444"
 NEG_COLOR = "#22c55e"
 NEU_COLOR = "#94a3b8"
 
+# ── 共用顏色常數（grid / zero / missing / legend bg）────────
+GRID_COLOR     = "#cbd5e1"
+NEU_ZERO_COLOR = "#94a3b8"
+MISSING_FILL   = "rgba(148,163,184,0.22)"
+MISSING_BORDER = "rgba(100,116,139,0.24)"
+MISSING_TEXT   = "rgba(100,116,139,0.85)"
+LEGEND_BG      = "rgba(241,245,249,0.85)"
+
+# ── 共用 layout 片段 ───────────────────────────────────────
+HIDDEN_Y2 = dict(overlaying="y", range=[0, 1], visible=False, fixedrange=True)
+
 # ── 顏色方案（去除重複 key）───────────────────────────────────
 COLORS: dict[str, str] = {
     "HBM/DRAM 記憶體": "#3b82f6",
@@ -115,7 +126,7 @@ LAYOUT_BASE = dict(
         orientation="h",
         yanchor="bottom", y=1.02,
         xanchor="left", x=0,
-        bgcolor="rgba(241,245,249,0.85)",
+        bgcolor=LEGEND_BG,
         entrywidth=120,
         entrywidthmode="pixels",
     ),
@@ -390,7 +401,6 @@ with st.sidebar:
 
         _latest = _cached_latest_date()
         if _latest:
-            _today = date.today()
             _latest_dt = datetime.strptime(_latest, "%Y-%m-%d").date()
             _lag = (_today - _latest_dt).days
             _lag_str = f"（{_lag} 天前）" if _lag > 0 else "（今日）"
@@ -436,7 +446,7 @@ with st.spinner("載入資料..."):
         start_str, end_str, split, tier, institution, unit
     )
 
-_, all_tickers, _, _ = cached_load_universe(tier)  # cache hit; tier_label_sel used in caption
+_universe_cats, all_tickers, _ticker_to_cat, _universe_meta = cached_load_universe(tier)  # cache hit; tier_label_sel used in caption
 st.title("主力資金類股輪動")
 st.caption(
     f"{tier_label_sel}（{len(all_tickers)} 檔）　｜　"
@@ -447,8 +457,8 @@ st.caption(
 # 單位顯示字尾（供 hover panel JS / 軸標籤使用）
 UNIT_SUFFIX = {"shares": "股", "value_thousand": "千元", "value_oku": "億"}
 _unit_suffix = UNIT_SUFFIX.get(unit, "股")
-# 數值格式：億元用 1 位小數，其他整數
-_unit_fmt = ".2f" if unit == "value_oku" else ",.0f"
+# 數值格式：億元用 2 位小數（含千分位），其他整數
+_unit_fmt = ",.2f" if unit == "value_oku" else ",.0f"
 
 if not period_labels:
     st.warning("選定區間無交易資料，請稍候自動補抓中...")
@@ -457,6 +467,13 @@ if not period_labels:
 if _selected_cats:
     cat_list    = [c for c in cat_list if c in _selected_cats]
     period_data = {c: period_data[c] for c in cat_list}
+
+_missing_set: set[str] = set(missing_labels)
+
+active_tickers: set[str] = {
+    tk for cat in cat_list for tk in _universe_cats.get(cat, {}).keys()
+}
+_trading_dates: list[date] = trading_dates_in_range(start_date, end_date)
 
 # ── 警示摘要區 ──────────────────────────────────────────────
 def _render_alerts():
@@ -496,19 +513,11 @@ def _render_alerts():
     # 3. 融資/法人背離天數（若已抓 margin）
     if _margin_auto:
         try:
-            _m_db = load_margin_from_db(
-                trading_dates_in_range(
-                    datetime.strptime(start_str, "%Y-%m-%d").date(),
-                    datetime.strptime(end_str,   "%Y-%m-%d").date(),
-                )
-            )
+            _m_db = load_margin_from_db(_trading_dates)
             if _m_db:
-                _universe_cats_a, _, _, _ = cached_load_universe(tier)
-                _active_tkrs_a = {tk for cat in cat_list
-                                  for tk in _universe_cats_a.get(cat, {}).keys()}
                 _by_date_a = {}
                 for (tk, dt), v in _m_db.items():
-                    if tk not in _active_tkrs_a:
+                    if tk not in active_tickers:
                         continue
                     slot = _by_date_a.setdefault(dt, [0, 0])
                     slot[0] += (v.get("margin_balance", 0) or 0) - (v.get("margin_prev", 0) or 0)
@@ -517,7 +526,7 @@ def _render_alerts():
                     m_chg = _by_date_a[dt][0]
                     # 當日法人合計（股）
                     i_db = load_from_db([dt])
-                    i_net = sum(v.get("total", 0) for (tk, _d), v in i_db.items() if tk in _active_tkrs_a)
+                    i_net = sum(v.get("total", 0) for (tk, _d), v in i_db.items() if tk in active_tickers)
                     if (m_chg > 0 and i_net < 0) or (m_chg < 0 and i_net > 0):
                         _div += 1
                 _a3.metric("📊 融資-法人 背離天數", f"{_div}")
@@ -530,17 +539,11 @@ def _render_alerts():
         _a3.caption("左側啟用融資融券顯示")
 
     # 4. 外資持股接近上限（剩 <5%）標的數
-    _universe_cats_q, _, _, _ = cached_load_universe(tier)
-    _active_tkrs_q = {tk for cat in cat_list for tk in _universe_cats_q.get(cat, {}).keys()}
-    _qdates = trading_dates_in_range(
-        datetime.strptime(start_str, "%Y-%m-%d").date(),
-        datetime.strptime(end_str,   "%Y-%m-%d").date(),
-    )
     _near_limit = []
-    if _qdates:
-        _q_db = load_qfii_from_db([_qdates[-1]])
+    if _trading_dates:
+        _q_db = load_qfii_from_db([_trading_dates[-1]])
         for (tk, _dt), v in _q_db.items():
-            if tk in _active_tkrs_q and v.get("remaining_pct", 100) < 5:
+            if tk in active_tickers and v.get("remaining_pct", 100) < 5:
                 _near_limit.append((tk, v.get("remaining_pct", 0)))
     _a4.metric("⚠️ 外資接近上限（剩<5%）", f"{len(_near_limit)} 檔")
     if _near_limit:
@@ -570,7 +573,7 @@ with st.expander("⏮️ 時間軸回放（單期 snapshot）"):
     fig_scrub = go.Figure(go.Bar(
         x=_sc_data, y=_sc_cats, orientation="h",
         marker_color=_sc_colors,
-        text=[f"{v:+,.2f}" if unit == "value_oku" else f"{v:+,.0f}" for v in _sc_data],
+        text=[f"{v:+{_unit_fmt}}" for v in _sc_data],
         textposition="outside",
         hovertemplate="%{y}<br>%{x:+,.2f}<extra></extra>",
     ))
@@ -579,9 +582,9 @@ with st.expander("⏮️ 時間軸回放（單期 snapshot）"):
         height=max(300, len(cat_list) * 30 + 80),
         xaxis=dict(title=f"當期 {institution_label} 買賣超（{_unit_suffix}）",
                    tickformat=",.2f" if unit == "value_oku" else ",",
-                   gridcolor="#cbd5e1",
-                   zeroline=True, zerolinecolor="#94a3b8"),
-        yaxis=dict(autorange="reversed", gridcolor="#cbd5e1"),
+                   gridcolor=GRID_COLOR,
+                   zeroline=True, zerolinecolor=NEU_ZERO_COLOR),
+        yaxis=dict(autorange="reversed", gridcolor=GRID_COLOR),
         showlegend=False,
     )
     st.plotly_chart(fig_scrub, use_container_width=True)
@@ -644,21 +647,21 @@ def build_period_xaxis(period_labels: list[str], split: str) -> dict:
             type="date",
             range=[start_dt, end_dt],
             rangebreaks=[dict(bounds=["sat", "mon"])],
-            gridcolor="#cbd5e1",
+            gridcolor=GRID_COLOR,
         )
 
     return dict(
         type="category",
         categoryorder="array",
         categoryarray=period_labels,
-        gridcolor="#cbd5e1",
+        gridcolor=GRID_COLOR,
     )
 
 
 # ── 共用：加無資料標記 ───────────────────────────────────────
 def add_missing_markers(fig, missing_labels, period_labels, split):
-    _fill_color = "rgba(148,163,184,0.22)"
-    _border_color = "rgba(100,116,139,0.24)"
+    _fill_color = MISSING_FILL
+    _border_color = MISSING_BORDER
 
     for lbl in missing_labels:
         if split != "day":
@@ -710,7 +713,7 @@ def add_missing_markers(fig, missing_labels, period_labels, split):
                 yref="paper",
                 text="無資料",
                 showarrow=False,
-                font=dict(size=8, color="rgba(100,116,139,0.85)"),
+                font=dict(size=8, color=MISSING_TEXT),
                 yanchor="bottom",
             )
 
@@ -764,18 +767,61 @@ def add_transparent_xaxis_helper(
 
 
 # ── 共用輔助：數字格式化 ─────────────────────────────────────
-def _color_num(v: float) -> str:
-    if unit == "value_oku":
-        txt_pos = f"{v:+,.2f} {_unit_suffix}"
-        txt_zero = f"0 {_unit_suffix}"
-    else:
-        txt_pos = f"{v:+,.0f} {_unit_suffix}"
-        txt_zero = f"0 {_unit_suffix}"
+def _color_num(v: float, unit: str, suffix: str) -> str:
+    fmt = "+,.2f" if unit == "value_oku" else "+,.0f"
+    txt_pos = f"{v:{fmt}} {suffix}"
+    txt_zero = f"0 {suffix}"
     if v > 0:
         return f'<span style="color:{POS_COLOR};font-weight:600">{txt_pos}</span>'
     elif v < 0:
         return f'<span style="color:{NEG_COLOR};font-weight:600">{txt_pos}</span>'
     return f'<span style="color:{NEU_COLOR}">{txt_zero}</span>'
+
+
+# ── 模組頂層 helpers（避免每 rerun 重新定義）────────────────
+def _bar_trace(
+    fig: go.Figure,
+    vals: list[float],
+    name: str,
+    color: str,
+    legendgroup: str,
+    period_labels: list[str],
+) -> None:
+    pos = [v if v > 0 else 0 for v in vals]
+    neg = [v if v < 0 else 0 for v in vals]
+    fig.add_trace(go.Bar(
+        x=period_labels, y=pos, name=name,
+        marker_color=color, opacity=0.85,
+        legendgroup=legendgroup,
+        hovertemplate="%{x}<extra></extra>",
+    ))
+    fig.add_trace(go.Bar(
+        x=period_labels, y=neg, name=name,
+        marker_color=color, opacity=0.4,
+        legendgroup=legendgroup, showlegend=False,
+        hovertemplate="%{x}<extra></extra>",
+    ))
+
+
+def _hhi_bg(v) -> str:
+    try:
+        v = float(v)
+    except Exception:
+        return ""
+    if v > 2500:
+        return "background-color: #fecaca"
+    if v > 1500:
+        return "background-color: #fef08a"
+    return "background-color: #bbf7d0"
+
+
+_FOREIGN_BROKER_KEYWORDS = ("高盛", "摩根", "美林", "花旗", "瑞銀", "瑞信",
+                            "野村", "新加坡商", "港商", "法商", "美商",
+                            "匯豐", "麥格理", "德意志", "日商", "星展")
+
+
+def _is_foreign(name: str) -> bool:
+    return any(k in name for k in _FOREIGN_BROKER_KEYWORDS)
 
 def _style_num_col(val) -> str:
     try:
@@ -1127,6 +1173,12 @@ def build_panel_data(tab_mode: str) -> str:
 
 
 cat_colors = {cat: COLORS.get(cat, DEFAULT_COLOR) for cat in cat_list}
+cat_rgba_015: dict[str, str] = {
+    cat: "rgba({},{},{},0.15)".format(
+        int(c[1:3], 16), int(c[3:5], 16), int(c[5:7], 16)
+    )
+    for cat, c in cat_colors.items()
+}
 
 # 一次建立所有 tab 的 panel_data JSON，避免每個 tab 重複計算
 _panel_tab1 = build_panel_data("tab1")
@@ -1164,7 +1216,6 @@ tab8 = _tabs[_tab_idx] if _fut_auto else None
 # ── Tab 1：資金強度佔比（100% 堆疊面積，abs）────────────────
 with tab1:
     fig1 = go.Figure()
-    _missing_set = set(missing_labels)
     _segments_per_cat = {
         cat: split_by_missing(period_labels, period_data[cat]["pos"], _missing_set)
         for cat in cat_list
@@ -1198,13 +1249,8 @@ with tab1:
     fig1.update_layout(
         **LAYOUT_BASE,
         height=500,
-        yaxis=dict(ticksuffix="%", range=[0, 100], gridcolor="#cbd5e1"),
-        yaxis2=dict(
-            overlaying="y",
-            range=[0, 1],
-            visible=False,
-            fixedrange=True,
-        ),
+        yaxis=dict(ticksuffix="%", range=[0, 100], gridcolor=GRID_COLOR),
+        yaxis2=HIDDEN_Y2,
         xaxis=build_period_xaxis(period_labels, split),
     )
     add_missing_markers(fig1, missing_labels, period_labels, split)
@@ -1225,14 +1271,11 @@ with tab2:
     )
 
     fig2 = go.Figure()
-    _missing_set2 = set(missing_labels)
 
     for cat in cat_list:
         color = cat_colors[cat]
-        rgba_fill = "rgba({},{},{},0.15)".format(
-            int(color[1:3], 16), int(color[3:5], 16), int(color[5:7], 16)
-        )
-        segments = split_by_missing(period_labels, period_data[cat]["cumsum"], _missing_set2)
+        rgba_fill = cat_rgba_015[cat]
+        segments = split_by_missing(period_labels, period_data[cat]["cumsum"], _missing_set)
         for i, (sx, sy) in enumerate(segments):
             fig2.add_trace(go.Scatter(
                 x=sx,
@@ -1249,22 +1292,17 @@ with tab2:
 
     add_transparent_xaxis_helper(fig2, period_labels)
 
-    fig2.add_hline(y=0, line_width=1, line_color="#94a3b8", line_dash="dot")
+    fig2.add_hline(y=0, line_width=1, line_color=NEU_ZERO_COLOR, line_dash="dot")
 
     fig2.update_layout(
         **LAYOUT_BASE,
         height=500,
         yaxis=dict(
             title=f"累積買賣超（{_unit_suffix}）",
-            gridcolor="#cbd5e1",
+            gridcolor=GRID_COLOR,
             tickformat=",.2f" if unit == "value_oku" else ",",
         ),
-        yaxis2=dict(
-            overlaying="y",
-            range=[0, 1],
-            visible=False,
-            fixedrange=True,
-        ),
+        yaxis2=HIDDEN_Y2,
         xaxis=build_period_xaxis(period_labels, split),
     )
     add_missing_markers(fig2, missing_labels, period_labels, split)
@@ -1280,17 +1318,16 @@ with tab3:
     )
 
     fig3 = go.Figure()
-    _missing_set3 = set(missing_labels)
 
     for cat in cat_list:
         color    = cat_colors[cat]
         raw_vals = period_data[cat]["raw"]
         pos = [
-            None if lbl in _missing_set3 else (v if v > 0 else 0)
+            None if lbl in _missing_set else (v if v > 0 else 0)
             for lbl, v in zip(period_labels, raw_vals)
         ]
         neg = [
-            None if lbl in _missing_set3 else (v if v < 0 else 0)
+            None if lbl in _missing_set else (v if v < 0 else 0)
             for lbl, v in zip(period_labels, raw_vals)
         ]
 
@@ -1304,9 +1341,9 @@ with tab3:
 
     # 整體合計線：缺漏日不畫點，避免跨過灰色缺資料區塊。
     _period_net_valid = [
-        v for lbl, v in zip(period_labels, period_net) if lbl not in _missing_set3
+        v for lbl, v in zip(period_labels, period_net) if lbl not in _missing_set
     ]
-    for i, (sx, sy) in enumerate(split_by_missing(period_labels, period_net, _missing_set3)):
+    for i, (sx, sy) in enumerate(split_by_missing(period_labels, period_net, _missing_set)):
         fig3.add_trace(go.Scatter(
             x=sx,
             y=sy,
@@ -1342,7 +1379,7 @@ with tab3:
         orientation="h",
         yanchor="bottom", y=1.02,
         xanchor="left", x=0,
-        bgcolor="rgba(241,245,249,0.85)",
+        bgcolor=LEGEND_BG,
         font=dict(size=11),
         entrywidth=110,
         entrywidthmode="pixels",
@@ -1351,9 +1388,9 @@ with tab3:
         **_layout3,
         yaxis=dict(
             title=f"買賣超（{_unit_suffix}）",
-            gridcolor="#cbd5e1",
+            gridcolor=GRID_COLOR,
             tickformat=",.2f" if unit == "value_oku" else ",",
-            zeroline=True, zerolinecolor="#94a3b8", zerolinewidth=1.5,
+            zeroline=True, zerolinecolor=NEU_ZERO_COLOR, zerolinewidth=1.5,
         ),
         xaxis=build_period_xaxis(period_labels, split),
     )
@@ -1372,27 +1409,11 @@ with tab4:
 
     fig4 = go.Figure()
 
-    def _bar_trace(fig, vals, name, color, legendgroup):
-        pos = [v if v > 0 else 0 for v in vals]
-        neg = [v if v < 0 else 0 for v in vals]
-        fig.add_trace(go.Bar(
-            x=period_labels, y=pos, name=name,
-            marker_color=color, opacity=0.85,
-            legendgroup=legendgroup,
-            hovertemplate="%{x}<extra></extra>",
-        ))
-        fig.add_trace(go.Bar(
-            x=period_labels, y=neg, name=name,
-            marker_color=color, opacity=0.4,
-            legendgroup=legendgroup, showlegend=False,
-            hovertemplate="%{x}<extra></extra>",
-        ))
+    _bar_trace(fig4, _foreign_net, "外資合計", "#2563eb", "foreign", period_labels)
+    _bar_trace(fig4, _invest_net,  "投信合計", "#8b5cf6", "invest",  period_labels)
+    _bar_trace(fig4, _dealer_net,  "自營合計", "#f97316", "dealer",  period_labels)
 
-    _bar_trace(fig4, _foreign_net, "外資合計", "#2563eb", "foreign")
-    _bar_trace(fig4, _invest_net,  "投信合計", "#8b5cf6", "invest")
-    _bar_trace(fig4, _dealer_net,  "自營合計", "#f97316", "dealer")
-
-    fig4.add_hline(y=0, line_width=1, line_color="#94a3b8", line_dash="dot")
+    fig4.add_hline(y=0, line_width=1, line_color=NEU_ZERO_COLOR, line_dash="dot")
 
     _layout4 = {
         **LAYOUT_BASE,
@@ -1400,12 +1421,12 @@ with tab4:
         "height": 520,
         "yaxis": dict(title=f"買賣超（{_unit_suffix}）",
                       tickformat=",.2f" if unit == "value_oku" else ",",
-                      gridcolor="#cbd5e1"),
+                      gridcolor=GRID_COLOR),
         "legend": dict(
             orientation="h",
             yanchor="bottom", y=1.02,
             xanchor="center", x=0.5,
-            bgcolor="rgba(241,245,249,0.85)",
+            bgcolor=LEGEND_BG,
             font=dict(size=12),
             tracegroupgap=0,
             itemwidth=80,
@@ -1450,13 +1471,13 @@ with tab5:
         with col1:
             st.markdown("**▲ 資金流入（相較首期）**")
             for cat, diff in gainers[:5]:
-                st.markdown(f"- {cat}：{_color_num(diff)}", unsafe_allow_html=True)
+                st.markdown(f"- {cat}：{_color_num(diff, unit, _unit_suffix)}", unsafe_allow_html=True)
             if not gainers:
                 st.markdown("- 無明顯流入")
         with col2:
             st.markdown("**▼ 資金流出（相較首期）**")
             for cat, diff in losers[:5]:
-                st.markdown(f"- {cat}：{_color_num(diff)}", unsafe_allow_html=True)
+                st.markdown(f"- {cat}：{_color_num(diff, unit, _unit_suffix)}", unsafe_allow_html=True)
             if not losers:
                 st.markdown("- 無明顯流出")
 
@@ -1560,8 +1581,7 @@ with tab5:
 
         # ── 相關性矩陣 ────────────────────────────────────────
         # ── 籌碼集中度 HHI（若有分點資料）──────────────────
-        _universe_cats_h, _, _, _ = cached_load_universe(tier)
-        _h_tkrs = [tk for cat in cat_list for tk in _universe_cats_h.get(cat, {}).keys()]
+        _h_tkrs = [tk for cat in cat_list for tk in _universe_cats.get(cat, {}).keys()]
         _h_rows = load_broker_from_db(_h_tkrs, start_str, end_str) if _h_tkrs else []
         if _h_rows:
             st.subheader("籌碼集中度 HHI")
@@ -1581,18 +1601,12 @@ with tab5:
                 _hhi = ((_sub.groupby("broker_name")["net_lots"].sum().abs() / _abs_tot) ** 2).sum() * 10000
                 _days = _sub["trade_date"].nunique()
                 _cat  = next((c for c in cat_list
-                              if tk in _universe_cats_h.get(c, {})), "?")
+                              if tk in _universe_cats.get(c, {})), "?")
                 _hhi_by_ticker.append({"類股": _cat, "代碼": tk,
-                                       "公司": _universe_cats_h.get(_cat, {}).get(tk, tk),
+                                       "公司": _universe_cats.get(_cat, {}).get(tk, tk),
                                        "HHI": _hhi, "資料天數": _days})
             if _hhi_by_ticker:
                 _hhi_df = pd.DataFrame(_hhi_by_ticker).sort_values("HHI", ascending=False)
-                def _hhi_bg(v):
-                    try: v = float(v)
-                    except: return ""
-                    if v > 2500: return f"background-color: #fecaca"
-                    if v > 1500: return f"background-color: #fef08a"
-                    return f"background-color: #bbf7d0"
                 st.dataframe(
                     _hhi_df.style.format({"HHI": "{:,.0f}"})
                         .applymap(_hhi_bg, subset=["HHI"]),
@@ -1643,26 +1657,15 @@ if tab6 is not None:
             "**融券↑** = 空方壓力加重。（單位：張）"
         )
 
-        _m_dates_full = trading_dates_in_range(
-            datetime.strptime(start_str, "%Y-%m-%d").date(),
-            datetime.strptime(end_str,   "%Y-%m-%d").date(),
-        )
-        _m_db = load_margin_from_db(_m_dates_full)
+        _m_db = load_margin_from_db(_trading_dates)
 
         if not _m_db:
             st.warning("融資融券 DB 無資料。請在左側「散戶情緒（融資融券）」expander 按「補抓融資融券」。")
         else:
-            # 按日期聚合：整個當前 cat_list 成員股合計
-            _active_tkrs = set()
-            _universe_cats, _, _u_t2c, _ = cached_load_universe(tier)
-            for cat in cat_list:
-                for tk in _universe_cats.get(cat, {}).keys():
-                    _active_tkrs.add(tk)
-
             # 依日期分組累加
             _by_date = {}
             for (tk, dt), v in _m_db.items():
-                if tk not in _active_tkrs:
+                if tk not in active_tickers:
                     continue
                 slot = _by_date.setdefault(dt, {
                     "margin_balance": 0.0, "margin_prev": 0.0,
@@ -1687,7 +1690,7 @@ if tab6 is not None:
                 _inst_daily = {d: 0.0 for d in _sorted_dates}
                 _db_data = load_from_db(_sorted_dates)
                 for (tk, dt), v in _db_data.items():
-                    if tk in _active_tkrs and dt in _inst_dates:
+                    if tk in active_tickers and dt in _inst_dates:
                         _inst_daily[dt] += v.get("total", 0.0) / 1000.0   # 股 → 張
                 _inst_net = [_inst_daily[d] for d in _sorted_dates]
 
@@ -1725,10 +1728,10 @@ if tab6 is not None:
                 fig6.update_layout(
                     **{k: v for k, v in LAYOUT_BASE.items() if k not in ("legend",)},
                     height=640,
-                    yaxis=dict(title="融資餘額（張）", gridcolor="#cbd5e1", tickformat=","),
+                    yaxis=dict(title="融資餘額（張）", gridcolor=GRID_COLOR, tickformat=","),
                     yaxis2=dict(title="法人買賣超（張）", overlaying="y", side="right",
                                 showgrid=False, tickformat=",+"),
-                    yaxis3=dict(title="融券餘額（張）", gridcolor="#cbd5e1", tickformat=","),
+                    yaxis3=dict(title="融券餘額（張）", gridcolor=GRID_COLOR, tickformat=","),
                     legend=dict(orientation="h", yanchor="bottom", y=1.03, xanchor="left", x=0),
                 )
                 st.plotly_chart(fig6, use_container_width=True)
@@ -1753,18 +1756,7 @@ if tab7 is not None:
             "資料來源：HiStock 分點（當日，僅前 15 買方 + 前 15 賣方）。"
         )
 
-        # 外資券商辨識（關鍵字）
-        _foreign_keywords = ["高盛", "摩根", "美林", "花旗", "瑞銀", "瑞信",
-                             "野村", "新加坡商", "港商", "法商", "美商",
-                             "匯豐", "麥格理", "德意志", "日商", "星展"]
-        def _is_foreign(name: str) -> bool:
-            return any(k in name for k in _foreign_keywords)
-
-        _universe_cats, _, _u_t2c, _ = cached_load_universe(tier)
-        _bt_tkrs = set()
-        for cat in cat_list:
-            for tk in _universe_cats.get(cat, {}).keys():
-                _bt_tkrs.add(tk)
+        _bt_tkrs = active_tickers
 
         if not _bt_tkrs:
             st.warning("當前類股無標的。")
@@ -1802,9 +1794,9 @@ if tab7 is not None:
                     fig_b.update_layout(
                         **{k: v for k, v in LAYOUT_BASE.items() if k not in ("legend",)},
                         height=520,
-                        yaxis=dict(autorange="reversed", gridcolor="#cbd5e1"),
-                        xaxis=dict(title="買超（張）", tickformat=",", gridcolor="#cbd5e1",
-                                   zeroline=True, zerolinecolor="#94a3b8"),
+                        yaxis=dict(autorange="reversed", gridcolor=GRID_COLOR),
+                        xaxis=dict(title="買超（張）", tickformat=",", gridcolor=GRID_COLOR,
+                                   zeroline=True, zerolinecolor=NEU_ZERO_COLOR),
                         showlegend=False,
                     )
                     st.plotly_chart(fig_b, use_container_width=True)
@@ -1821,9 +1813,9 @@ if tab7 is not None:
                     fig_s.update_layout(
                         **{k: v for k, v in LAYOUT_BASE.items() if k not in ("legend",)},
                         height=520,
-                        yaxis=dict(autorange="reversed", gridcolor="#cbd5e1"),
-                        xaxis=dict(title="賣超（張）", tickformat=",", gridcolor="#cbd5e1",
-                                   zeroline=True, zerolinecolor="#94a3b8"),
+                        yaxis=dict(autorange="reversed", gridcolor=GRID_COLOR),
+                        xaxis=dict(title="賣超（張）", tickformat=",", gridcolor=GRID_COLOR,
+                                   zeroline=True, zerolinecolor=NEU_ZERO_COLOR),
                         showlegend=False,
                     )
                     st.plotly_chart(fig_s, use_container_width=True)
@@ -1837,7 +1829,7 @@ if tab7 is not None:
                     )
                     _tk2name = {tk: nm for c in _universe_cats.values() for tk, nm in c.items()}
                     _bk["name"] = _bk["ticker"].map(lambda t: _tk2name.get(t, t))
-                    _bk["cat"]  = _bk["ticker"].map(lambda t: _u_t2c.get(t, "?"))
+                    _bk["cat"]  = _bk["ticker"].map(lambda t: _ticker_to_cat.get(t, "?"))
                     _bk["abs"]  = _bk["net_lots"].abs()
                     _bk = _bk.sort_values("abs", ascending=False)
                     if not _bk.empty and _bk["abs"].sum() > 0:
@@ -1875,11 +1867,7 @@ if tab8 is not None:
             "**外資期貨淨多 + 現貨買超** = 看多加碼。"
             "契約：TXF 臺股期、EXF 電子期。"
         )
-        _f_dates = trading_dates_in_range(
-            datetime.strptime(start_str, "%Y-%m-%d").date(),
-            datetime.strptime(end_str,   "%Y-%m-%d").date(),
-        )
-        _f_rows = load_futures_from_db(_f_dates, ["TXF", "EXF"])
+        _f_rows = load_futures_from_db(_trading_dates, ["TXF", "EXF"])
         if not _f_rows:
             st.warning("期貨未平倉 DB 無資料。重新載入或擴大日期區間。")
         else:
@@ -1908,12 +1896,12 @@ if tab8 is not None:
                         opacity=0.8,
                         hovertemplate=f"%{{x}}<br>{_role_label[role]} 淨 %{{y:+,.0f}} 口<extra></extra>",
                     ))
-                fig_fut.add_hline(y=0, line_color="#94a3b8", line_width=1, line_dash="dot")
+                fig_fut.add_hline(y=0, line_color=NEU_ZERO_COLOR, line_width=1, line_dash="dot")
                 fig_fut.update_layout(
                     **{k: v for k, v in LAYOUT_BASE.items() if k not in ("legend",)},
                     barmode="group", height=480,
-                    yaxis=dict(title=f"{_cid} 淨多空口數", tickformat=",", gridcolor="#cbd5e1",
-                               zeroline=True, zerolinecolor="#94a3b8"),
+                    yaxis=dict(title=f"{_cid} 淨多空口數", tickformat=",", gridcolor=GRID_COLOR,
+                               zeroline=True, zerolinecolor=NEU_ZERO_COLOR),
                     legend=dict(orientation="h", yanchor="bottom", y=1.03, xanchor="left", x=0),
                 )
                 st.plotly_chart(fig_fut, use_container_width=True)
@@ -1936,13 +1924,8 @@ if tab8 is not None:
 
 # ── 個股明細 ─────────────────────────────────────────────────
 with st.expander("個股明細（全期合計）"):
-    _detail_cats, _, _detail_ticker_to_cat, _ = cached_load_universe(tier)
-    _detail_dates = trading_dates_in_range(
-        datetime.strptime(start_str, "%Y-%m-%d").date(),
-        datetime.strptime(end_str,   "%Y-%m-%d").date(),
-    )
-    _detail_db   = load_from_db(_detail_dates)
-    _detail_agg  = aggregate_by_category(_detail_db, _detail_dates, _detail_cats, _detail_ticker_to_cat)
+    _detail_db   = load_from_db(_trading_dates)
+    _detail_agg  = aggregate_by_category(_detail_db, _trading_dates, _universe_cats, _ticker_to_cat)
 
     _drill_cat = st.selectbox(
         "篩選類股（全選顯示所有）",
@@ -1957,13 +1940,12 @@ with st.expander("個股明細（全期合計）"):
     _detail_dk = _key_for_unit("dealer",  unit)
     # 取最新 QFII 快照（單日）
     _qfii_latest = {}
-    if _detail_dates:
-        _q = load_qfii_from_db([_detail_dates[-1]])
+    if _trading_dates:
+        _q = load_qfii_from_db([_trading_dates[-1]])
         for (tk, _dt), v in _q.items():
             _qfii_latest[tk] = v
     # TDCC 大戶（分級 15 = 1000 張以上）最新週
-    _all_tkrs_for_tdcc = list({tk for cat in cat_list for tk in _detail_cats.get(cat, {}).keys()})
-    _tdcc_latest = load_tdcc_latest(_all_tkrs_for_tdcc)
+    _tdcc_latest = load_tdcc_latest(list(active_tickers))
     rows = []
     for cat in cat_list:
         if _drill_cat != "（全部）" and cat != _drill_cat:
@@ -1975,7 +1957,7 @@ with st.expander("個股明細（全期合計）"):
         for ticker, sdat in sorted(
             agg_vals["stocks"].items(), key=lambda x: x[1]["shares"], reverse=True
         ):
-            name = _detail_cats[cat].get(ticker, ticker)
+            name = _universe_cats[cat].get(ticker, ticker)
             if unit == "shares":
                 stock_disp = sdat["shares"]
             elif unit == "value_oku":
