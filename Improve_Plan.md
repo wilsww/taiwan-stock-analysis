@@ -924,8 +924,9 @@ Phase D  (D1 → D2)   ── 可選，最後做
 
 ### 延伸建議
 
-- 下一步執行 Phase C（§2.C1）前，建議先 checkout `5a1a48a` 產生一份 baseline 截圖（Tab1–Tab8 + scrubber + sidebar），作為 C1 與未來 D1/D2 的視覺比對標準。
-- Phase D 需先等 C1 驗證，且應獨立開分支，因為 `st.session_state` 存取與 tab rendering 順序敏感。
+- Phase C 等價性已用 fixture 單元驗證；視覺 / DB query 次數仍待人工 `streamlit run` 回歸（勾選融資融券，確認 `📊 融資-法人 背離天數` metric 與 `5a1a48a` baseline 相同）。
+- 進 Phase D 前建議先 checkout `1a0a48d` 產生 baseline 截圖（Tab1–Tab8 + scrubber + sidebar + alerts 四格），作為 D1 / D2 視覺比對標準。
+- Phase D 須獨立開分支（`refactor/phase-d1`、`refactor/phase-d2`），因為 `st.session_state` 存取與 tab rendering 順序敏感。
 
 ---
 
