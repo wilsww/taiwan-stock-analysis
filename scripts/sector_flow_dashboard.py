@@ -8,6 +8,7 @@ sector_flow_dashboard.py — 主力資金類股輪動 Streamlit 儀表板
 import sys
 import json
 from pathlib import Path
+from typing import Optional
 
 SCRIPT_DIR = Path(__file__).resolve().parent
 ROOT_DIR = SCRIPT_DIR.parent
@@ -200,7 +201,16 @@ def load_data(
     start_dt = datetime.strptime(start_str, "%Y-%m-%d").date()
     end_dt   = datetime.strptime(end_str,   "%Y-%m-%d").date()
 
-    all_dates = trading_dates_in_range(start_dt, end_dt)
+    if split == "day":
+        # 日模式保留所有平日，讓休市/缺漏日能在 x 軸留白。
+        all_dates = []
+        cur = start_dt
+        while cur <= end_dt:
+            if cur.weekday() < 5:
+                all_dates.append(cur.strftime("%Y-%m-%d"))
+            cur += timedelta(days=1)
+    else:
+        all_dates = trading_dates_in_range(start_dt, end_dt)
     if not all_dates:
         return [], list(categories.keys()), {}, []
 
@@ -591,29 +601,166 @@ _coverage_json = json.dumps(
 )
 
 
+def build_missing_spans(
+    labels: list[str],
+    missing_set: set[str],
+) -> list[tuple[int, int, bool, bool]]:
+    """回傳連續缺漏區間與左右是否緊鄰有效資料。"""
+    spans: list[tuple[int, int, bool, bool]] = []
+    span_start: Optional[int] = None
+    span_end: Optional[int] = None
+
+    for idx, lbl in enumerate(labels):
+        if lbl not in missing_set:
+            if span_start is not None and span_end is not None:
+                has_left_data = span_start > 0 and labels[span_start - 1] not in missing_set
+                has_right_data = span_end + 1 < len(labels) and labels[span_end + 1] not in missing_set
+                spans.append((span_start, span_end, has_left_data, has_right_data))
+                span_start = span_end = None
+            continue
+
+        if span_start is None:
+            span_start = span_end = idx
+        else:
+            span_end = idx
+
+    if span_start is not None and span_end is not None:
+        has_left_data = span_start > 0 and labels[span_start - 1] not in missing_set
+        has_right_data = span_end + 1 < len(labels) and labels[span_end + 1] not in missing_set
+        spans.append((span_start, span_end, has_left_data, has_right_data))
+
+    return spans
+
+
+def _day_label_dt(label: str) -> datetime:
+    return datetime.strptime(label, "%Y-%m-%d")
+
+
+def build_period_xaxis(period_labels: list[str], split: str) -> dict:
+    if split == "day" and period_labels:
+        start_dt = _day_label_dt(period_labels[0]) - timedelta(hours=12)
+        end_dt = _day_label_dt(period_labels[-1]) + timedelta(hours=12)
+        return dict(
+            type="date",
+            range=[start_dt, end_dt],
+            rangebreaks=[dict(bounds=["sat", "mon"])],
+            gridcolor="#cbd5e1",
+        )
+
+    return dict(
+        type="category",
+        categoryorder="array",
+        categoryarray=period_labels,
+        gridcolor="#cbd5e1",
+    )
+
+
 # ── 共用：加無資料標記 ───────────────────────────────────────
 def add_missing_markers(fig, missing_labels, period_labels, split):
+    _fill_color = "rgba(148,163,184,0.22)"
+    _border_color = "rgba(100,116,139,0.24)"
+
     for lbl in missing_labels:
-        if split == "day":
-            fig.add_shape(
-                type="line",
-                x0=lbl, x1=lbl, y0=0, y1=1,
-                xref="x", yref="paper",
-                line=dict(width=1, dash="dot", color="rgba(148,163,184,0.6)"),
+        if split != "day":
+            if lbl in period_labels:
+                fig.add_vrect(
+                    x0=lbl,
+                    x1=lbl,
+                    x0shift=-0.5,
+                    x1shift=0.5,
+                    fillcolor=_fill_color,
+                    line_width=0,
+                    layer="below",
+                )
+            continue
+
+    if split == "day" and missing_labels:
+        missing_set = set(missing_labels)
+
+        for start_idx, end_idx, has_left_data, has_right_data in build_missing_spans(period_labels, missing_set):
+            start_dt = _day_label_dt(period_labels[start_idx]) - timedelta(hours=12)
+            end_dt = _day_label_dt(period_labels[end_idx]) + timedelta(hours=12)
+            fig.add_vrect(
+                x0=start_dt,
+                x1=end_dt,
+                fillcolor=_fill_color,
+                line_width=0,
+                layer="below",
             )
+
+            # 只有在缺漏區塊真的接到有效資料時，才補一條淡邊界線，避免邊界視覺偏移。
+            if has_left_data:
+                fig.add_vline(
+                    x=start_dt,
+                    line_width=1,
+                    line_color=_border_color,
+                    layer="below",
+                )
+            if has_right_data:
+                fig.add_vline(
+                    x=end_dt,
+                    line_width=1,
+                    line_color=_border_color,
+                    layer="below",
+                )
+
             fig.add_annotation(
-                x=lbl, y=1, yref="paper",
-                text="無資料", showarrow=False,
-                font=dict(size=8, color="rgba(148,163,184,0.8)"),
+                x=start_dt + (end_dt - start_dt) / 2,
+                y=1,
+                yref="paper",
+                text="無資料",
+                showarrow=False,
+                font=dict(size=8, color="rgba(100,116,139,0.85)"),
                 yanchor="bottom",
             )
-        else:
-            idx = period_labels.index(lbl) if lbl in period_labels else None
-            if idx is not None:
-                fig.add_vrect(
-                    x0=idx - 0.4, x1=idx + 0.4,
-                    fillcolor="rgba(148,163,184,0.15)", line_width=0,
-                )
+
+
+def split_by_missing(
+    labels: list[str],
+    values: list[float],
+    missing_set: set[str],
+) -> list[tuple[list[str], list[float]]]:
+    """依缺漏日切成多段連續有效資料，缺漏 label 不會出現在回傳段內。"""
+    segments: list[tuple[list[str], list[float]]] = []
+    cur_x: list[str] = []
+    cur_y: list[float] = []
+
+    for lbl, val in zip(labels, values):
+        if lbl in missing_set:
+            if cur_x:
+                segments.append((cur_x, cur_y))
+                cur_x, cur_y = [], []
+            continue
+        cur_x.append(lbl)
+        cur_y.append(val)
+
+    if cur_x:
+        segments.append((cur_x, cur_y))
+
+    return segments
+
+
+def add_transparent_xaxis_helper(
+    fig: go.Figure,
+    labels: list[str],
+    *,
+    yaxis: str = "y2",
+    y_value: float = 0.5,
+) -> None:
+    """加一條透明 helper trace，保留所有 x 類別位置但不參與 hover。"""
+    if not labels:
+        return
+
+    fig.add_trace(go.Scatter(
+        x=labels,
+        y=[y_value] * len(labels),
+        mode="markers",
+        marker=dict(size=10, color="rgba(0,0,0,0)"),
+        hoverinfo="skip",
+        showlegend=False,
+        meta=dict(helper_trace=True),
+        yaxis=yaxis,
+    ))
 
 
 # ── 共用輔助：數字格式化 ─────────────────────────────────────
@@ -646,11 +793,13 @@ def render_chart_with_panel(
     panel_data_json: str,
     tab_mode: str,
     cat_colors: dict,
+    cat_order: Optional[list[str]] = None,
     height: int = 500,
     n_cats: int = 0,
     coverage_json: str = "{}",
 ) -> None:
     fig_json = fig.to_json()
+    cat_order_json = json.dumps(cat_order or [], ensure_ascii=False)
 
     # 動態 iframe 高度：panel 高度依類股數計算
     if tab_mode == "tab4":
@@ -688,9 +837,8 @@ def render_chart_with_panel(
     if tab_mode == "tab1":
         build_panel_js = """
         function buildPanel(label, panelData, catColors, coverage) {
-            var cats = Object.keys(panelData[label] || {});
+            var cats = orderedCatsForLabel(label);
             if (!cats.length) return '<div style="color:#94a3b8">無資料</div>';
-            cats.sort(function(a,b){ return (panelData[label][b].pos||0) - (panelData[label][a].pos||0); });
             var totalAbs = cats.reduce(function(s,c){ return s + (panelData[label][c].pos||0); }, 0);
             var html = '';
             cats.forEach(function(cat) {
@@ -711,9 +859,8 @@ def render_chart_with_panel(
     elif tab_mode == "tab2":
         build_panel_js = """
         function buildPanel(label, panelData, catColors, coverage) {
-            var cats = Object.keys(panelData[label] || {});
+            var cats = orderedCatsForLabel(label);
             if (!cats.length) return '<div style="color:#94a3b8">無資料</div>';
-            cats.sort(function(a,b){ return Math.abs(panelData[label][b].cumsum||0) - Math.abs(panelData[label][a].cumsum||0); });
             var html = '';
             cats.forEach(function(cat) {
                 var d = panelData[label][cat];
@@ -731,13 +878,9 @@ def render_chart_with_panel(
     elif tab_mode == "tab3":
         build_panel_js = """
         function buildPanel(label, panelData, catColors, coverage) {
-            var cats = Object.keys(panelData[label] || {});
+            var cats = orderedCatsForLabel(label);
             if (!cats.length) return '<div style="color:#94a3b8">無資料</div>';
-            cats.sort(function(a,b){ return Math.abs(panelData[label][b].raw||0) - Math.abs(panelData[label][a].raw||0); });
-            var total = cats.reduce(function(s,c){ return s + (panelData[label][c].raw||0); }, 0);
-            var totalColor = total > 0 ? POS_COLOR : (total < 0 ? NEG_COLOR : NEU_COLOR);
-            var html = '<div style="margin-bottom:8px;padding:4px 8px;background:#e2e8f0;border-radius:3px;font-size:12px">';
-            html += '整體合計：<span style="color:'+totalColor+';font-weight:700">'+formatVal(total)+' '+UNIT_SUFFIX+'</span></div>';
+            var html = '';
             cats.forEach(function(cat) {
                 var d = panelData[label][cat];
                 var raw = d.raw || 0;
@@ -806,16 +949,24 @@ def render_chart_with_panel(
     font-weight: 600;
     border-bottom: 1px solid #e2e8f0;
     padding-bottom: 4px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
   }}
   #panel-body {{
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(330px, 1fr));
+    gap: 10px;
   }}
   #panel-body > div {{
-    flex: 1 1 200px;
-    min-width: 180px;
-    max-width: 280px;
+    min-width: 0;
+    max-width: none;
+  }}
+  #panel-body.tab4-body {{
+    display: flex;
+    gap: 6px;
   }}
   #panel-body.tab4-body > div {{
     flex: 1 1 0;
@@ -836,9 +987,33 @@ def render_chart_with_panel(
 var figData = {fig_json};
 var panelData = {panel_data_json};
 var catColors = {json.dumps(cat_colors)};
+var catOrder = {cat_order_json};
 var coverageData = {coverage_json};
 
+function orderedCatsForLabel(label) {{
+    if (!panelData[label]) return [];
+    var ordered = catOrder.filter(function(cat) {{
+        return panelData[label][cat] !== undefined;
+    }});
+    return ordered.length ? ordered : Object.keys(panelData[label]);
+}}
+
+function tab3TotalMeta(label) {{
+    var cats = orderedCatsForLabel(label);
+    if (!cats.length) return '';
+    var total = cats.reduce(function(sum, cat) {{
+        return sum + (panelData[label][cat].raw || 0);
+    }}, 0);
+    var color = total > 0 ? POS_COLOR : (total < 0 ? NEG_COLOR : NEU_COLOR);
+    return '整體合計：<b style="color:' + color + '">' + formatVal(total) + ' ' + UNIT_SUFFIX + '</b>';
+}}
+
 figData.data.forEach(function(trace) {{
+    if (trace.meta && trace.meta.helper_trace) {{
+        trace.hoverinfo = 'skip';
+        trace.hovertemplate = null;
+        return;
+    }}
     trace.hovertemplate = '%{{x}}<extra></extra>';
     delete trace.hoverinfo;
 }});
@@ -858,10 +1033,19 @@ var panelBody = document.getElementById('panel-body');
 if (tabMode === 'tab4') {{ panelBody.classList.add('tab4-body'); }}
 
 function updatePanel(labelStr) {{
-    var headerHtml = '<span>📅 ' + labelStr + '</span>';
+    var metaItems = [];
+    if (tabMode === 'tab3') {{
+        metaItems.push('<span>' + tab3TotalMeta(labelStr) + '</span>');
+    }}
     if (tabMode !== 'tab4' && coverageData[labelStr] !== undefined) {{
         var covPct = (coverageData[labelStr] * 100).toFixed(0) + '%';
-        headerHtml += '<span style="float:right;font-weight:400;color:#64748b">資料覆蓋率：<b style="color:#1e293b">' + covPct + '</b></span>';
+        metaItems.push('<span>資料覆蓋率：<b style="color:#1e293b">' + covPct + '</b></span>');
+    }}
+    var headerHtml = '<span>📅 ' + labelStr + '</span>';
+    if (metaItems.length) {{
+        headerHtml += '<span style="display:flex;align-items:center;gap:14px;flex-wrap:wrap;justify-content:flex-end;font-weight:400;color:#64748b">';
+        headerHtml += metaItems.join('');
+        headerHtml += '</span>';
     }}
     panelHeader.innerHTML = headerHtml;
     panelBody.innerHTML = buildPanel(labelStr, panelData, catColors, coverageData);
@@ -981,39 +1165,56 @@ tab8 = _tabs[_tab_idx] if _fut_auto else None
 with tab1:
     fig1 = go.Figure()
     _missing_set = set(missing_labels)
+    _segments_per_cat = {
+        cat: split_by_missing(period_labels, period_data[cat]["pos"], _missing_set)
+        for cat in cat_list
+    }
+    _segment_count = max((len(segments) for segments in _segments_per_cat.values()), default=0)
 
-    for cat in cat_list:
-        color    = cat_colors[cat]
-        pos_vals = [
-            None if lbl in _missing_set else v
-            for lbl, v in zip(period_labels, period_data[cat]["pos"])
-        ]
-        fig1.add_trace(go.Scatter(
-            x=period_labels, y=pos_vals,
-            name=cat,
-            stackgroup="one", groupnorm="percent",
-            fill="tonexty",
-            line=dict(width=0.5, color=color),
-            fillcolor=color,
-            opacity=0.85,
-            connectgaps=False,
-            hovertemplate="%{x}<extra></extra>",
-        ))
+    for seg_idx in range(_segment_count):
+        for cat in cat_list:
+            segments = _segments_per_cat[cat]
+            if seg_idx >= len(segments):
+                continue
+            sx, sy = segments[seg_idx]
+            color = cat_colors[cat]
+            fig1.add_trace(go.Scatter(
+                x=sx,
+                y=sy,
+                name=cat,
+                legendgroup=cat,
+                showlegend=(seg_idx == 0),
+                stackgroup=f"g{seg_idx}",
+                groupnorm="percent",
+                fill="tonexty",
+                line=dict(width=0.5, color=color),
+                fillcolor=color,
+                opacity=0.85,
+                hovertemplate="%{x}<extra></extra>",
+            ))
+
+    add_transparent_xaxis_helper(fig1, period_labels)
 
     fig1.update_layout(
         **LAYOUT_BASE,
         height=500,
         yaxis=dict(ticksuffix="%", range=[0, 100], gridcolor="#cbd5e1"),
-        xaxis=dict(gridcolor="#cbd5e1"),
+        yaxis2=dict(
+            overlaying="y",
+            range=[0, 1],
+            visible=False,
+            fixedrange=True,
+        ),
+        xaxis=build_period_xaxis(period_labels, split),
     )
     add_missing_markers(fig1, missing_labels, period_labels, split)
 
     parts = ["面積高度 = 各類股買賣超絕對值佔比"]
     if missing_labels:
-        parts.append(f"灰色虛線 = 開盤無資料（{len(missing_labels)} 天）")
+        parts.append(f"灰色底色 = 開盤無資料（{len(missing_labels)} 天）")
     st.caption("　｜　".join(parts))
 
-    render_chart_with_panel(fig1, _panel_tab1, "tab1", cat_colors, height=500, n_cats=len(cat_list), coverage_json=_coverage_json)
+    render_chart_with_panel(fig1, _panel_tab1, "tab1", cat_colors, cat_order=cat_list, height=500, n_cats=len(cat_list), coverage_json=_coverage_json)
 
 
 # ── Tab 2：累積買賣超（倉位趨勢河流圖）─────────────────────
@@ -1027,24 +1228,26 @@ with tab2:
     _missing_set2 = set(missing_labels)
 
     for cat in cat_list:
-        color       = cat_colors[cat]
-        cumsum_vals = [
-            None if lbl in _missing_set2 else v
-            for lbl, v in zip(period_labels, period_data[cat]["cumsum"])
-        ]
-        fig2.add_trace(go.Scatter(
-            x=period_labels,
-            y=cumsum_vals,
-            name=cat,
-            mode="lines",
-            connectgaps=False,
-            line=dict(width=1.5, color=color),
-            fill="tozeroy",
-            fillcolor="rgba({},{},{},0.15)".format(
-                int(color[1:3], 16), int(color[3:5], 16), int(color[5:7], 16)
-            ),
-            hovertemplate="%{x}<extra></extra>",
-        ))
+        color = cat_colors[cat]
+        rgba_fill = "rgba({},{},{},0.15)".format(
+            int(color[1:3], 16), int(color[3:5], 16), int(color[5:7], 16)
+        )
+        segments = split_by_missing(period_labels, period_data[cat]["cumsum"], _missing_set2)
+        for i, (sx, sy) in enumerate(segments):
+            fig2.add_trace(go.Scatter(
+                x=sx,
+                y=sy,
+                name=cat,
+                legendgroup=cat,
+                showlegend=(i == 0),
+                mode="lines",
+                line=dict(width=1.5, color=color),
+                fill="tozeroy",
+                fillcolor=rgba_fill,
+                hovertemplate="%{x}<extra></extra>",
+            ))
+
+    add_transparent_xaxis_helper(fig2, period_labels)
 
     fig2.add_hline(y=0, line_width=1, line_color="#94a3b8", line_dash="dot")
 
@@ -1056,11 +1259,17 @@ with tab2:
             gridcolor="#cbd5e1",
             tickformat=",.2f" if unit == "value_oku" else ",",
         ),
-        xaxis=dict(gridcolor="#cbd5e1"),
+        yaxis2=dict(
+            overlaying="y",
+            range=[0, 1],
+            visible=False,
+            fixedrange=True,
+        ),
+        xaxis=build_period_xaxis(period_labels, split),
     )
     add_missing_markers(fig2, missing_labels, period_labels, split)
 
-    render_chart_with_panel(fig2, _panel_tab2, "tab2", cat_colors, height=500, n_cats=len(cat_list), coverage_json=_coverage_json)
+    render_chart_with_panel(fig2, _panel_tab2, "tab2", cat_colors, cat_order=cat_list, height=500, n_cats=len(cat_list), coverage_json=_coverage_json)
 
 
 # ── Tab 3：每期買賣超量體（正負 stacked bar）────────────────
@@ -1071,12 +1280,19 @@ with tab3:
     )
 
     fig3 = go.Figure()
+    _missing_set3 = set(missing_labels)
 
     for cat in cat_list:
         color    = cat_colors[cat]
         raw_vals = period_data[cat]["raw"]
-        pos = [v if v > 0 else 0 for v in raw_vals]
-        neg = [v if v < 0 else 0 for v in raw_vals]
+        pos = [
+            None if lbl in _missing_set3 else (v if v > 0 else 0)
+            for lbl, v in zip(period_labels, raw_vals)
+        ]
+        neg = [
+            None if lbl in _missing_set3 else (v if v < 0 else 0)
+            for lbl, v in zip(period_labels, raw_vals)
+        ]
 
         shared = dict(
             x=period_labels, name=cat,
@@ -1086,21 +1302,27 @@ with tab3:
         fig3.add_trace(go.Bar(**shared, y=pos, showlegend=True))
         fig3.add_trace(go.Bar(**shared, y=neg, showlegend=False, hoverinfo="skip"))
 
-    # 整體合計線
-    fig3.add_trace(go.Scatter(
-        x=period_labels,
-        y=period_net,
-        name="整體合計",
-        mode="lines+markers",
-        line=dict(width=2, color="#1e293b", dash="dot"),
-        marker=dict(size=4),
-        hovertemplate=" <extra></extra>",
-    ))
+    # 整體合計線：缺漏日不畫點，避免跨過灰色缺資料區塊。
+    _period_net_valid = [
+        v for lbl, v in zip(period_labels, period_net) if lbl not in _missing_set3
+    ]
+    for i, (sx, sy) in enumerate(split_by_missing(period_labels, period_net, _missing_set3)):
+        fig3.add_trace(go.Scatter(
+            x=sx,
+            y=sy,
+            name="整體合計",
+            legendgroup="period_net",
+            showlegend=(i == 0),
+            mode="lines+markers",
+            line=dict(width=2, color="#1e293b", dash="dot"),
+            marker=dict(size=4),
+            hovertemplate=" <extra></extra>",
+        ))
 
     # ±1σ 警示線（整體合計）
-    if len(period_net) >= 3:
-        _mean = np.mean(period_net)
-        _std  = np.std(period_net)
+    if len(_period_net_valid) >= 3:
+        _mean = np.mean(_period_net_valid)
+        _std  = np.std(_period_net_valid)
         for _band_val, _band_name, _band_color in [
             (_mean + _std, "+1σ", "rgba(239,68,68,0.5)"),
             (_mean,        "均值", "rgba(100,116,139,0.6)"),
@@ -1133,11 +1355,11 @@ with tab3:
             tickformat=",.2f" if unit == "value_oku" else ",",
             zeroline=True, zerolinecolor="#94a3b8", zerolinewidth=1.5,
         ),
-        xaxis=dict(gridcolor="#cbd5e1"),
+        xaxis=build_period_xaxis(period_labels, split),
     )
     add_missing_markers(fig3, missing_labels, period_labels, split)
 
-    render_chart_with_panel(fig3, _panel_tab3, "tab3", cat_colors, height=560, n_cats=len(cat_list), coverage_json=_coverage_json)
+    render_chart_with_panel(fig3, _panel_tab3, "tab3", cat_colors, cat_order=cat_list, height=560, n_cats=len(cat_list), coverage_json=_coverage_json)
 
 
 # ── Tab 4：三大法人對比（grouped bar）───────────────────────
@@ -1193,10 +1415,10 @@ with tab4:
         "margin": dict(t=80, b=40, l=60, r=80),
     }
     fig4.update_layout(**_layout4)
-    fig4.update_xaxes(gridcolor="#cbd5e1")
+    fig4.update_xaxes(**build_period_xaxis(period_labels, split))
 
     add_missing_markers(fig4, missing_labels, period_labels, split)
-    render_chart_with_panel(fig4, _panel_tab4, "tab4", cat_colors, height=520, n_cats=0, coverage_json=_coverage_json)
+    render_chart_with_panel(fig4, _panel_tab4, "tab4", cat_colors, cat_order=cat_list, height=520, n_cats=0, coverage_json=_coverage_json)
 
     # 同步 / 背離統計
     if len(period_labels) >= 2:

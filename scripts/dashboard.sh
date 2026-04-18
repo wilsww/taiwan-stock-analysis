@@ -7,6 +7,7 @@ set -u
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 APP="$ROOT_DIR/scripts/sector_flow_dashboard.py"
+VENV_PY="$ROOT_DIR/.venv/bin/python"
 PID_FILE="/tmp/taiwan_dashboard.pid"
 LOG_FILE="/tmp/taiwan_dashboard.log"
 PORT=8501
@@ -67,6 +68,12 @@ PY
 select_python() {
   local candidate
   : >"$LOG_FILE"
+
+  if [[ -x "$VENV_PY" ]]; then
+    if probe_python "$VENV_PY" "$VENV_PY"; then
+      return 0
+    fi
+  fi
 
   if [[ "$(uname -s)" == "Darwin" ]] && command -v arch >/dev/null 2>&1 && [[ -x /usr/bin/python3 ]]; then
     if probe_python "arch -arm64 /usr/bin/python3" arch -arm64 /usr/bin/python3; then
