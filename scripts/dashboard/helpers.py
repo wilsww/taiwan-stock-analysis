@@ -68,6 +68,20 @@ SPLIT_MAP = {
     "全期": "none",
 }
 
+
+def _unit_scale(unit: str) -> float:
+    """將 DB 原始值縮放為顯示單位。"""
+    if unit == "value_oku":
+        return 1 / 1e5
+    return 1.0
+
+
+def _key_for_unit(base: str, unit: str) -> str:
+    """依 unit 決定要從 agg 取哪個欄位。"""
+    if unit == "shares":
+        return base
+    return f"{base}_value"
+
 # Tab1/2 直接套用 LAYOUT_BASE（含預設 legend）。
 # Tab3/4/6/8 需客製 legend（不同 font size / x 錨點 / tracegroupgap），
 # 於各 tab 內 override 整個 "legend" key；Tab5/7 走 st.plotly_chart 傳 showlegend=False。
