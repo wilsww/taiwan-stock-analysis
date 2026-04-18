@@ -1,6 +1,53 @@
-/.DS_Store
-/.claude
-/.claudeignore
-/.markdownlint.json
-/.mcp.json
-/CLAUDE.md
+# macOS
+.DS_Store
+
+# Local AI / editor settings
+.claude/
+.claudeignore
+.vscode/
+.idea/
+
+# Project-local notes / config not intended for GitHub
+CLAUDE.md
+.markdownlint.json
+.mcp.json
+
+# Python caches / virtualenvs
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Environment / secrets
+.env
+.env.*
+.streamlit/secrets.toml
+
+# Logs / temp files
+*.log
+tmp/
+temp/
+
+# SQLite runtime artifacts and backups
+*.db-shm
+*.db-wal
+*.sqlite-shm
+*.sqlite-wal
+data/revenue/*.db.bak*
+
+# Generated reports
+reports/daily/
+reports/archive/
+reports/deep_analysis/
+reports/risk/
+reports/valuation/
+reports/sector_flow/
+
+# Binary reference material not needed on GitHub
+*.pdf
+*.docx
+*.xlsx
