@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台股追蹤日報 — 2026-03-17</title>
+<style>
+  :root {
+    --bg:      #0f172a;
+    --bg2:     #1e293b;
+    --bg3:     #334155;
+    --text:    #e2e8f0;
+    --muted:   #94a3b8;
+    --accent:  #38bdf8;
+    --border:  #334155;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+    font-size: 13px;
+    line-height: 1.6;
+    padding: 24px;
+  }
+  h1 {
+    font-size: 1.4em;
+    color: var(--accent);
+    margin-bottom: 4px;
+  }
+  .subtitle { color: var(--muted); font-size: 0.85em; margin-bottom: 24px; }
+  h2 {
+    font-size: 1em;
+    color: var(--accent);
+    margin: 28px 0 12px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+    letter-spacing: 0.05em;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 8px;
+  }
+  thead th {
+    background: var(--bg3);
+    color: var(--muted);
+    padding: 8px 12px;
+    text-align: left;
+    font-weight: 500;
+    font-size: 0.8em;
+    letter-spacing: 0.06em;
+  }
+  tbody tr { border-bottom: 1px solid var(--border); }
+  tbody tr:hover { background: var(--bg2); }
+  tbody tr.row-alert { background: #1e293b88; }
+  td {
+    padding: 8px 12px;
+    color: var(--text);
+    vertical-align: middle;
+  }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  code {
+    background: var(--bg3);
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-size: 0.9em;
+    color: var(--accent);
+  }
+  .na { color: var(--muted); }
+  .chip {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 4px;
+    font-size: 0.75em;
+    font-weight: 600;
+    margin: 1px;
+  }
+  .chip.red    { background: #f8717122; color: #f87171; }
+  .chip.green  { background: #4ade8022; color: #4ade80; }
+  .chip.orange { background: #fb923c22; color: #fb923c; }
+  .chip.blue   { background: #60a5fa22; color: #60a5fa; }
+  .alerts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .alert-card {
+    background: var(--bg2);
+    border-radius: 8px;
+    padding: 14px 16px;
+    border-left: 3px solid;
+  }
+  .alert-card.red    { border-color: #f87171; }
+  .alert-card.green  { border-color: #4ade80; }
+  .alert-card.orange { border-color: #fb923c; }
+  .alert-card.blue   { border-color: #60a5fa; }
+  .alert-title {
+    font-weight: 700;
+    margin-bottom: 4px;
+    font-size: 0.9em;
+  }
+  .no-alert {
+    color: #4ade80;
+    background: #4ade8011;
+    border: 1px solid #4ade8033;
+    border-radius: 6px;
+    padding: 10px 16px;
+  }
+  .footer {
+    margin-top: 40px;
+    color: var(--muted);
+    font-size: 0.8em;
+    border-top: 1px solid var(--border);
+    padding-top: 12px;
+  }
+  strong { color: #f1f5f9; }
+</style>
+</head>
+<body>
+<h1>📊 台股追蹤日報 — 2026-03-17</h1>
+<div class="subtitle">自動產生：2026-03-17 23:32:11　｜　方案B 平行擷取版</div>
+
+<h2>⚠️ 今日警示</h2>
+<div class="alerts-grid">
+
+            <div class="alert-card red">
+                <div class="alert-title">⚡ 大波動警示 — 2408</div>
+                <div>今日漲跌幅：<strong>+3.82%</strong>（閾值 ±3%）</div>
+            </div>
+            <div class="alert-card green">
+                <div class="alert-title">📊 月營收更新 — 2408 南亞科技</div>
+                <div>2026年02月 NT$156.07億｜YoY <strong>+586.7%</strong></div>
+            </div>
+            <div class="alert-card red">
+                <div class="alert-title">⚡ 大波動警示 — 2344</div>
+                <div>今日漲跌幅：<strong>+5.56%</strong>（閾值 ±3%）</div>
+            </div>
+            <div class="alert-card green">
+                <div class="alert-title">📊 月營收更新 — 2344 華邦電子</div>
+                <div>2026年02月 NT$119.73億｜YoY <strong>+88.5%</strong></div>
+            </div>
+            <div class="alert-card red">
+                <div class="alert-title">⚡ 大波動警示 — 3363</div>
+                <div>今日漲跌幅：<strong>-3.17%</strong>（閾值 ±3%）</div>
+            </div>
+            <div class="alert-card red">
+                <div class="alert-title">⚡ 大波動警示 — 2455</div>
+                <div>今日漲跌幅：<strong>-5.68%</strong>（閾值 ±3%）</div>
+            </div>
+            <div class="alert-card red">
+                <div class="alert-title">⚡ 大波動警示 — 4979</div>
+                <div>今日漲跌幅：<strong>-7.49%</strong>（閾值 ±3%）</div>
+            </div>
+            <div class="alert-card red">
+                <div class="alert-title">⚡ 大波動警示 — 3081</div>
+                <div>今日漲跌幅：<strong>-10.00%</strong>（閾值 ±3%）</div>
+            </div>
+            <div class="alert-card green">
+                <div class="alert-title">📊 月營收更新 — 3081 聯亞光電</div>
+                <div>2026年02月 NT$2.90億｜YoY <strong>+91.4%</strong></div>
+            </div>
+            <div class="alert-card red">
+                <div class="alert-title">⚡ 大波動警示 — 3105</div>
+                <div>今日漲跌幅：<strong>-3.29%</strong>（閾值 ±3%）</div>
+            </div>
+            <div class="alert-card green">
+                <div class="alert-title">📊 月營收更新 — 3105 穩懋半導體</div>
+                <div>2026年02月 NT$14.74億｜YoY <strong>+25.9%</strong></div>
+            </div>
+</div>
+
+<h2>1. 股價快照</h2>
+<table>
+  <thead>
+    <tr>
+      <th>代碼</th><th>公司</th><th>收盤價</th><th>漲跌</th><th>漲跌幅</th><th>市值</th><th>標記</th>
+    </tr>
+  </thead>
+  <tbody>
+        <tr class="row-alert">
+            <td><code>2408.TW</code></td>
+            <td>南亞科技</td>
+            <td class="num">NT$271.5</td>
+            <td class="num" style="color:#4ade80">+10.0</td>
+            <td class="num" style="color:#4ade80;font-weight:600">+3.82%</td>
+            <td class="num">NT$8413億</td>
+            <td><span class="chip red">大波動</span> <span class="chip green">營收更新</span></td>
+        </tr>
+        <tr class="row-alert">
+            <td><code>2344.TW</code></td>
+            <td>華邦電子</td>
+            <td class="num">NT$123.5</td>
+            <td class="num" style="color:#4ade80">+6.5</td>
+            <td class="num" style="color:#4ade80;font-weight:600">+5.56%</td>
+            <td class="num">NT$5558億</td>
+            <td><span class="chip red">大波動</span> <span class="chip green">營收更新</span></td>
+        </tr>
+        <tr class="row-alert">
+            <td><code>3363.TWO</code></td>
+            <td>上詮光纖</td>
+            <td class="num">NT$610.0</td>
+            <td class="num" style="color:#f87171">-20.0</td>
+            <td class="num" style="color:#f87171;font-weight:600">-3.17%</td>
+            <td class="num">NT$693億</td>
+            <td><span class="chip red">大波動</span></td>
+        </tr>
+        <tr class="row-alert">
+            <td><code>2455.TW</code></td>
+            <td>全新光電</td>
+            <td class="num">NT$216.0</td>
+            <td class="num" style="color:#f87171">-13.0</td>
+            <td class="num" style="color:#f87171;font-weight:600">-5.68%</td>
+            <td class="num">NT$397億</td>
+            <td><span class="chip red">大波動</span></td>
+        </tr>
+        <tr class="row-alert">
+            <td><code>4979.TWO</code></td>
+            <td>華星光通</td>
+            <td class="num">NT$395.0</td>
+            <td class="num" style="color:#f87171">-32.0</td>
+            <td class="num" style="color:#f87171;font-weight:600">-7.49%</td>
+            <td class="num">NT$556億</td>
+            <td><span class="chip red">大波動</span></td>
+        </tr>
+        <tr class="row-alert">
+            <td><code>3081.TWO</code></td>
+            <td>聯亞光電</td>
+            <td class="num">NT$1350.0</td>
+            <td class="num" style="color:#f87171">-150.0</td>
+            <td class="num" style="color:#f87171;font-weight:600">-10.00%</td>
+            <td class="num">NT$1249億</td>
+            <td><span class="chip red">大波動</span> <span class="chip green">營收更新</span></td>
+        </tr>
+        <tr class="row-alert">
+            <td><code>3105.TWO</code></td>
+            <td>穩懋半導體</td>
+            <td class="num">NT$293.5</td>
+            <td class="num" style="color:#f87171">-10.0</td>
+            <td class="num" style="color:#f87171;font-weight:600">-3.29%</td>
+            <td class="num">NT$1244億</td>
+            <td><span class="chip red">大波動</span> <span class="chip green">營收更新</span></td>
+        </tr>
+        <tr class="">
+            <td><code>4919.TW</code></td>
+            <td>新唐科技</td>
+            <td class="num">NT$82.2</td>
+            <td class="num" style="color:#f87171">-2.3</td>
+            <td class="num" style="color:#f87171;font-weight:600">-2.72%</td>
+            <td class="num">NT$345億</td>
+            <td><span class="na">—</span></td>
+        </tr></tbody>
+</table>
+
+<h2>2. 最新月營收（即時爬取）</h2>
+<table>
+  <thead>
+    <tr>
+      <th>代碼</th><th>公司</th><th>月份</th><th>營收</th><th>MoM%</th><th>YoY%</th><th>來源</th>
+    </tr>
+  </thead>
+  <tbody>
+        <tr>
+            <td><code>2408</code></td>
+            <td>南亞科技</td>
+            <td class="num">2026年02月</td>
+            <td class="num"><strong>NT$156.07億</strong></td>
+            <td class="num"><span style="color:#4ade80;font-weight:600">+1.94%</span></td>
+            <td class="num"><span style="color:#4ade80;font-weight:600">+586.71%</span></td>
+            <td><span style="color:#4ade80">●</span> winvest.tw</td>
+        </tr>
+        <tr>
+            <td><code>2344</code></td>
+            <td>華邦電子</td>
+            <td class="num">2026年02月</td>
+            <td class="num"><strong>NT$119.73億</strong></td>
+            <td class="num"><span style="color:#4ade80;font-weight:600">+1.65%</span></td>
+            <td class="num"><span style="color:#4ade80;font-weight:600">+88.45%</span></td>
+            <td><span style="color:#4ade80">●</span> winvest.tw</td>
+        </tr>
+        <tr>
+            <td><code>3081</code></td>
+            <td>聯亞光電</td>
+            <td class="num">2026年02月</td>
+            <td class="num"><strong>NT$2.90億</strong></td>
+            <td class="num"><span style="color:#4ade80;font-weight:600">+7.21%</span></td>
+            <td class="num"><span style="color:#4ade80;font-weight:600">+91.44%</span></td>
+            <td><span style="color:#4ade80">●</span> winvest.tw</td>
+        </tr>
+        <tr>
+            <td><code>3105</code></td>
+            <td>穩懋半導體</td>
+            <td class="num">2026年02月</td>
+            <td class="num"><strong>NT$14.74億</strong></td>
+            <td class="num"><span style="color:#4ade80;font-weight:600">+0.41%</span></td>
+            <td class="num"><span style="color:#4ade80;font-weight:600">+25.92%</span></td>
+            <td><span style="color:#4ade80">●</span> winvest.tw</td>
+        </tr>
+        <tr>
+            <td><code>2455</code></td>
+            <td colspan="6" class="na">無資料</td>
+        </tr>
+        <tr>
+            <td><code>4979</code></td>
+            <td colspan="6" class="na">無資料</td>
+        </tr>
+        <tr>
+            <td><code>3363</code></td>
+            <td colspan="6" class="na">無資料</td>
+        </tr>
+        <tr>
+            <td><code>4919</code></td>
+            <td colspan="6" class="na">無資料</td>
+        </tr></tbody>
+</table>
+<div style="color:var(--muted);font-size:0.8em;margin-top:4px">
+  ● 本次即時爬取　○ 來自本地資料庫
+</div>
+
+<h2>3. 技術指標</h2>
+<table>
+  <thead>
+    <tr>
+      <th>代碼</th><th>RSI(14)</th><th>MACD</th><th>MA20</th><th>MA20 偏離</th><th>MA60 偏離</th><th>趨勢</th>
+    </tr>
+  </thead>
+  <tbody>
+        <tr>
+            <td><code>2344</code></td>
+            <td><span style="background:#fb923c22;color:#fb923c;padding:2px 8px;border-radius:4px;font-size:0.8em">58.8 偏強</span></td>
+            <td style="color:#4ade80;font-weight:600">金叉↑</td>
+            <td class="num">111.52</td>
+            <td class="num"><span style="color:#4ade80">+10.7</span>%</td>
+            <td class="num"><span style="color:#4ade80">+22.6</span>%</td>
+            <td>強勢（站上雙均線）</td>
+        </tr>
+        <tr>
+            <td><code>2408</code></td>
+            <td><span style="background:#94a3b822;color:#94a3b8;padding:2px 8px;border-radius:4px;font-size:0.8em">54.0 中性</span></td>
+            <td style="color:#f87171;font-weight:600">死叉↓</td>
+            <td class="num">261.0</td>
+            <td class="num"><span style="color:#4ade80">+4.0</span>%</td>
+            <td class="num"><span style="color:#4ade80">+13.7</span>%</td>
+            <td>強勢（站上雙均線）</td>
+        </tr>
+        <tr>
+            <td><code>3363</code></td>
+            <td><span style="background:#fb923c22;color:#fb923c;padding:2px 8px;border-radius:4px;font-size:0.8em">60.0 偏強</span></td>
+            <td style="color:#4ade80;font-weight:600">金叉↑</td>
+            <td class="num">559.92</td>
+            <td class="num"><span style="color:#4ade80">+8.9</span>%</td>
+            <td class="num"><span style="color:#4ade80">+30.6</span>%</td>
+            <td>強勢（站上雙均線）</td>
+        </tr>
+        <tr>
+            <td><code>2455</code></td>
+            <td><span style="background:#94a3b822;color:#94a3b8;padding:2px 8px;border-radius:4px;font-size:0.8em">54.6 中性</span></td>
+            <td style="color:#f87171;font-weight:600">死叉↓</td>
+            <td class="num">209.3</td>
+            <td class="num"><span style="color:#4ade80">+3.2</span>%</td>
+            <td class="num"><span style="color:#4ade80">+23.8</span>%</td>
+            <td>強勢（站上雙均線）</td>
+        </tr>
+        <tr>
+            <td><code>3081</code></td>
+            <td><span style="background:#fb923c22;color:#fb923c;padding:2px 8px;border-radius:4px;font-size:0.8em">55.3 偏強</span></td>
+            <td style="color:#f87171;font-weight:600">死叉↓</td>
+            <td class="num">1327.0</td>
+            <td class="num"><span style="color:#4ade80">+1.7</span>%</td>
+            <td class="num"><span style="color:#4ade80">+47.1</span>%</td>
+            <td>強勢（站上雙均線）</td>
+        </tr>
+        <tr>
+            <td><code>4979</code></td>
+            <td><span style="background:#fb923c22;color:#fb923c;padding:2px 8px;border-radius:4px;font-size:0.8em">55.1 偏強</span></td>
+            <td style="color:#f87171;font-weight:600">死叉↓</td>
+            <td class="num">385.1</td>
+            <td class="num"><span style="color:#4ade80">+2.6</span>%</td>
+            <td class="num"><span style="color:#4ade80">+22.8</span>%</td>
+            <td>強勢（站上雙均線）</td>
+        </tr>
+        <tr>
+            <td><code>3105</code></td>
+            <td><span style="background:#94a3b822;color:#94a3b8;padding:2px 8px;border-radius:4px;font-size:0.8em">54.7 中性</span></td>
+            <td style="color:#f87171;font-weight:600">死叉↓</td>
+            <td class="num">289.57</td>
+            <td class="num"><span style="color:#4ade80">+1.4</span>%</td>
+            <td class="num"><span style="color:#4ade80">+25.6</span>%</td>
+            <td>強勢（站上雙均線）</td>
+        </tr>
+        <tr>
+            <td><code>4919</code></td>
+            <td><span style="background:#fb923c22;color:#fb923c;padding:2px 8px;border-radius:4px;font-size:0.8em">62.0 偏強</span></td>
+            <td style="color:#4ade80;font-weight:600">金叉↑</td>
+            <td class="num">74.89</td>
+            <td class="num"><span style="color:#4ade80">+9.8</span>%</td>
+            <td class="num"><span style="color:#4ade80">+33.0</span>%</td>
+            <td>強勢（站上雙均線）</td>
+        </tr></tbody>
+</table>
+
+<h2>4. 催化劑提醒</h2>
+<table>
+  <thead><tr><th>時間軸</th><th>事件</th><th>相關標的</th></tr></thead>
+  <tbody>
+    <tr><td>短線（M+0）</td><td>台股月營收公布（每月10日前後）</td><td>全部</td></tr>
+    <tr><td>短線（M+1）</td><td>Hyperscaler Q1 法說會（4月底）</td><td>南亞科、光通訊鏈</td></tr>
+    <tr><td>中線（Q2）</td><td>南亞科 2026 CapEx NT$500億 董事會決議</td><td><code>2408</code></td></tr>
+    <tr><td>中線（Q2）</td><td>華邦電 16nm CMS 量產進度</td><td><code>2344</code></td></tr>
+    <tr><td>長線</td><td>上詮 1.6T CPO FAU 系統廠驗證結果</td><td><code>3363</code></td></tr>
+  </tbody>
+</table>
+
+<div class="footer">
+  Plan B 輕量版自動日報　｜　資料來源：yfinance + winvest.tw + histock.tw + revenue.db
+</div>
+</body>
+</html>

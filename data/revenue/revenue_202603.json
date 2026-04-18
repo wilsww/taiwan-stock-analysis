@@ -1,0 +1,32 @@
+[
+  {
+    "ticker": "3037",
+    "company": "欣興電子",
+    "year": 2026,
+    "month": 2,
+    "revenue_m": 116000.0,
+    "mom_pct": -9.14,
+    "yoy_pct": 16.18,
+    "source": "winvest.tw"
+  },
+  {
+    "ticker": "8046",
+    "company": "南亞電路板",
+    "year": 2026,
+    "month": 2,
+    "revenue_m": 31660.0,
+    "mom_pct": -14.9,
+    "yoy_pct": 12.84,
+    "source": "winvest.tw"
+  },
+  {
+    "ticker": "3189",
+    "company": "景碩科技",
+    "year": 2026,
+    "month": 2,
+    "revenue_m": 32040.0,
+    "mom_pct": -19.1,
+    "yoy_pct": 10.0,
+    "source": "winvest.tw"
+  }
+]

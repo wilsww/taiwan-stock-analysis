@@ -1,0 +1,775 @@
+Operator
+
+Operator
+
+Ladies and gentlemen, thank you for joining us, and welcome to Micron Technologies' fiscal second-quarter 2026 financial conference call. After today's prepared remarks, we will host a question-and-answer session. I will now hand the conference over to Satya Kumar, Investor Relations. Satya, please go ahead.
+
+女士們、先生們，感謝各位的到來，歡迎參加美光科技2026財年第二季財務電話會議。在今天的演講結束後，我們將進行問答環節。現在我將把會議交給投資者關係部的薩蒂亞·庫馬爾。薩蒂亞，請繼續。
+
+Satya Kumar - Investor Relations
+
+Satya Kumar - Investor Relations
+
+Thank you, and welcome to Micron Technologies' fiscal second-quarter 2026 financial conference call. On the call with me today are Sanjay Mehrotra, our Chairman, President and CEO; and Mark Murphy, our CFO. Today's call is being webcast from our Investor Relations site at investors.micron.com, including audio and slides.
+
+謝謝，歡迎參加美光科技2026財年第二季財務電話會議。今天和我一起通話的是我們的董事長、總裁兼執行長 Sanjay Mehrotra，以及我們的財務長 Mark Murphy。今天的電話會議將透過我們的投資者關係網站 investors.micron.com 進行網路直播，包括音訊和幻燈片。
+
+In addition, the press release detailing our quarterly results has been posted on the website, along with the prepared remarks for this call. Today's discussion contains forward-looking statements that are subject to risks and uncertainties. These forward-looking statements include statements regarding our future financial and operating performance, as well as trends and expectations in our business, customers, market, market, industry, products and regulatory and other matters.
+
+此外，詳細介紹我們季度業績的新聞稿以及本次電話會議的準備發言稿均已發佈在網站上。今天的討論包含前瞻性陳述，這些陳述存在風險和不確定性。這些前瞻性聲明包括有關我們未來財務和營運績效的聲明，以及有關我們業務、客戶、市場、行業、產品、監管和其他事項的趨勢和預期。
+
+These statements are based on our current assumptions, and we assume no obligation to update these statements. Please refer to our most recent financial report on Forms 10-K, Forms 10-Q and our other filings with the SEC for more information on the risks and uncertainties that could cause actual results to differ materially from expectations.
+
+這些聲明是基於我們目前的假設，我們不承擔更新這些聲明的義務。有關可能導致實際結果與預期結果存在重大差異的風險和不確定性的更多信息，請參閱我們最新的 10-K 表格、10-Q 表格財務報告以及我們向美國證券交易委員會提交的其他文件。
+
+Today's discussion of financial results is presented on a non-GAAP financial basis unless otherwise specified. A reconciliation of GAAP to non-GAAP financial measures can be found on our website. I'll now turn the call over to Sanjay.
+
+除非另有說明，今天對財務表現的討論均以非公認會計準則（non-GAAP）為基礎。您可以在我們的網站上找到 GAAP 與非 GAAP 財務指標的調整表。現在我將把電話交給桑傑。
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+Thank you, Satya. Mytron delivered an exceptional fiscal Q2 with stellar records in revenue, gross margin, EPS and free cash flow. Quarterly revenue nearly tripled versus one year ago, and revenue for DRAM, NAND, HBM, and each business unit reached new highs.
+
+謝謝你，薩蒂亞。Mytron 在第二財季取得了卓越的業績，營收、毛利率、每股盈餘和自由現金流均創下佳績。季度營收與去年同期相比成長了近三倍，DRAM、NAND、HBM 以及各個業務部門的營收均創下新高。
+
+Our fiscal Q3 single-quarter revenue guidance exceeds the full-year revenue for every year in our company's history through fiscal 2024. For fiscal Q3, we anticipate exceptional records across revenue, gross margin, EPS, and free cash flow. Reflecting confidence in the sustained strength of our business, I'm pleased to announce that our board has approved a 30% increase in our quarterly dividend.
+
+我們預計第三財季的單季營收將超過公司歷史上直至 2024 財年的全年營收。我們預計第三財季的營收、毛利率、每股盈餘和自由現金流都將創下優異紀錄。鑑於我們對公司業務持續強勁發展的信心，我很高興地宣布，董事會已批准將季度股息提高 30%。
+
+The step-up in our results and the outlook are the outcome of an increase in memory demand driven by AI, structural supply constraints, and Micron's strong execution across the board. Our memory and storage solutions are at the heart of this AI revolution. Memory makes AI smarter and more capable, enabling longer context windows, deeper reasoning chains and multi-agent orchestration.
+
+我們業績和前景的提升，得益於人工智慧驅動的記憶體需求成長、結構性供應限制以及美光在各個方面的出色執行。我們的記憶體和儲存解決方案是這場人工智慧革命的核心。記憶體使人工智慧更聰明、更強大，從而能夠處理更長的上下文視窗、更深的推理鍊和多智能體協調。
+
+As AI evolves, we expect compute architectures to become more memory intensive. This is why we strongly believe that Micron is one of the biggest beneficiaries and enablers of AI. AI hasn't just increased demand for memory, it has fundamentally recast memory as a defining strategic asset in the AI era.
+
+隨著人工智慧的發展，我們預計計算架構將變得更加依賴記憶體。正因如此，我們堅信美光是人工智慧最大的受益者和推動者之一。人工智慧不僅增加了對記憶體的需求，而且從根本上改變了內存在人工智慧時代作為決定性戰略資產的地位。
+
+We continue to work with customers on strategic customer agreements, or SCAs, that are different from prior LTAs and have specific commitments over a multi-year time horizon for improved visibility and stability in our business model. These SCAs also provide customers greater certainty to plan their businesses while reinforcing long-term engagement across our broad product portfolio.
+
+我們繼續與客戶合作，制定策略客戶協議（SCA），這些協議與先前的長期協議（LTA）不同，並且在多年時間範圍內有具體的承諾，以提高我們業務模式的可見度和穩定性。這些 SCA 也能讓客戶更有把握地規劃業務，同時加強我們廣泛產品組合的長期合作關係。
+
+We are excited to have signed our first five-year SCA. We are making excellent progress ramping our industry-leading 1-gamma DRAM and G9 NAND technology nodes. We expect 1-gamma to become the highest volume node in Micron's history.
+
+我們很高興簽署了第一份五年供應合約協議。我們在提升業界領先的 1-gamma DRAM 和 G9 NAND 技術節點產能方面取得了卓越的進展。我們預計 1-gamma 將成為美光史上產量最高的節點。
+
+Our 1-gamma node was already the fastest ramp to mature yields, is ramping volumes faster than all prior nodes in our history and is on track to become a majority of our DRAM bit mix by mid-calendar 2026. We plan to increase EUV adoption at the 1-delta DRAM node, utilizing the latest generation EUV tools.
+
+我們的 1-gamma 節點已經實現了最快的良率提升，產量提升速度比我們歷史上所有節點都快，並且預計在 2026 年年中成為我們 DRAM 位元組合的大部分。我們計劃在 1-delta DRAM 節點上提高 EUV 技術的採用率，並利用最新一代 EUV 工具。
+
+These more advanced EUV tools will help us optimize both cleanroom space efficiency and patterning when scaling to one delta and beyond. In NAND, our G9 node also remains on track to constitute a majority of bids by mid-calendar 2026. We also achieved a record mix of QLC bids in the quarter.
+
+這些更先進的 EUV 工具將幫助我們在擴展到一個增量及更多時，優化潔淨室空間效率和圖案化效果。在 NAND 領域，我們的 G9 節點也預計在 2026 年年中佔據大部分投標份額。本季我們也實現了 QLC 投標組合的創紀錄組合。
+
+Looking ahead, we expect co-location of R&D and high-volume manufacturing at our Boise and our Singapore sites to speed up time to market for our leading-edge products. We see an unprecedented set of opportunities for memory and storage to enable the AI era across market segments and expect to meaningfully increase our R&D investments in fiscal 2027.
+
+展望未來，我們預計在博伊西和新加坡的研發和大規模生產基地進行集中生產，將加快我們領先產品的上市速度。我們看到記憶體和儲存為各個市場領域的人工智慧時代帶來了前所未有的機遇，並預計將在 2027 財年大幅增加研發投入。
+
+Micron's technology leadership, product excellence, and manufacturing execution is being recognized in quality scores from our customers. I'm pleased to report that a clear majority of our customers ranked Micron number one in quality. Turning to our end markets. AI demand is driving DRAM and NAND data center bit TAM to exceed 50% of the industry TAM for the first time in calendar 2026.
+
+美光科技的技術領先地位、卓越的產品品質和高效的製造能力，在客戶的品質評分中得到了認可。我很高興地報告，絕大多數客戶都將美光評為品質第一。轉向我們的終端市場。人工智慧需求推動 DRAM 和 NAND 資料中心位元 TAM 在 2026 年首次超過產業 TAM 的 50%。
+
+Traditional server demand is robust, driven by combination of demand from workloads initiated by Agentech AI as well as broad-based server refresh. AI server demand continues to be strong. Both AI and traditional server demand are constrained by lack of adequate DRAM and NAND supply.
+
+傳統伺服器需求強勁，這主要得益於 Agentech AI 發起的工作負載需求以及廣泛的伺服器更新換代。人工智慧伺服器需求持續強勁。人工智慧和傳統伺服器的需求都受到DRAM和NAND快閃記憶體供應不足的限制。
+
+We expect server units to grow in the low teens percentage range in calendar 2026. Driven by growth in both AI and traditional servers. We expect server DRAM content to continue to grow in calendar 2026 with the introduction of new platforms. At NVIDIA's GTC, we announced that Micron has begun volume shipment of its HBM4 36GB 12H in the first quarter of calendar year 2026 and is designed for NVIDIA Vera Rubin.
+
+我們預計到 2026 年，伺服器單元將成長 10% 左右。受人工智慧和傳統伺服器的雙重成長驅動。我們預計，隨著新平台的推出，伺服器 DRAM 容量在 2026 年將繼續成長。在 NVIDIA 的 GTC 大會上，我們宣布 Micron 已於 2026 年第一季開始批量出貨其 HBM4 36GB 12H，該產品專為 NVIDIA Vera Rubin 設計。
+
+With our HBM4 production ramp and volume shipments underway, we expect to reach mature yields faster than HBM3E. We have also sampled our HBM4 16 High product, which provides 48 gigabyte of HBM capacity in each HBM cube, a 33% increase in HBM capacity compared to HBM4 12H development of HBM4E.
+
+隨著 HBM4 產能爬坡和大量出貨的進行，我們預期其成熟良率的實現速度將比 HBM3E 更快。我們還對我們的 HBM4 16 High 產品進行了樣品測試，該產品在每個 HBM 立方體中提供 48 GB 的 HBM 容量，與 HBM4E 的 HBM4 12H 開發相比，HBM 容量增加了 33%。
+
+Our next-generation HBM product is well underway, and we expect to ramp volume in calendar 2027. Our HBM4E will leverage Micron's production-proven, industry-leading one-gamma DRAM technology node and is set to deliver another step-function improvement in performance, enabling a whole new generation of AI compute platforms across the industry.
+
+我們的下一代 HBM 產品正在順利研發中，我們預計將在 2027 年實現產量成長。我們的 HBM4E 將採用美光經過生產驗證的業界領先的單伽馬 DRAM 技術節點，並有望在性能上實現另一個階躍式提升，從而為整個行業帶來全新一代的 AI 計算平台。
+
+Additionally, HBM 4E customization options offer us further differentiation opportunities and even deeper R&D engagement with customers. Micron pioneered the development of LP DRAM for the data center, which consumes one-third the power of DDR DRAM server modules.
+
+此外，HBM 4E 的客製化選項為我們提供了進一步的差異化機會，並讓我們能夠與客戶進行更深入的研發合作。美光率先開發了用於資料中心的 LP DRAM，其功耗僅為 DDR DRAM 伺服器模組的三分之一。
+
+Building on this leadership, we sampled the industry's first 256 gigabyte LP SOCAM 2 product, which is built using our one gamma node and enables a massive 2 terabytes of capacity per CPU, quadrupling the content from just a year ago.
+
+憑藉這一領先優勢，我們推出了業界首款 256 GB LP SOCAM 2 產品，該產品採用我們的單一伽馬節點構建，每個 CPU 可實現高達 2 TB 的容量，比一年前的內容容量翻了四倍。
+
+We see expanding use of LPDRAM in the data center in the years ahead, and we are excited to maintain an industry-leading innovative product roadmap in this market. Rapid growth in AI influence is driving the emergence of new architectures optimized for the token economics of specific workloads.
+
+我們看到，未來幾年 LPDRAM 在資料中心的應用將會不斷擴大，我們很高興能夠在這個市場保持業界領先的創新產品路線圖。人工智慧影響力的快速成長正在推動針對特定工作負載的代幣經濟進行優化的新架構的出現。
+
+Micron's broad portfolio of HBM, LP, DDR, and SSD is a critical enabler across these architectures. At GTC, the recent announcement of NVIDIA Groq 3 LPX implements up to 12 terabytes of DDR5 in a rack-scale architecture.
+
+美光廣泛的 HBM、LP、DDR 和 SSD 產品組合是這些架構的關鍵推動因素。在 GTC 大會上，NVIDIA 最新發布的 Groq 3 LPX 採用機架級架構，最高可支援 12 TB 的 DDR5 記憶體。
+
+We are seeing an acceleration in NAND bit demand in the data center due to AI use cases such as vector database and KV cache offload and due to growing share of SSDs in capacity storage tiers. Micron's data center SSD product portfolio, enabled by our technology leadership and vertical integration, covers the spectrum from highest performance to highest capacity.
+
+由於人工智慧應用場景（例如向量資料庫和鍵值快取卸載）以及固態硬碟在容量儲存層中的份額不斷增長，我們看到資料中心對 NAND 位元的需求正在加速成長。憑藉技術領先地位和垂直整合能力，美光的資料中心 SSD 產品組合涵蓋了從最高效能到最高容量的各個方面。
+
+We are now in high-volume production of our G9 NAND-based PCIe Gen6 high-performance data center SSDs. Our 122-terabyte high-capacity SSD is seeing strong adoption and delivers 16 times the sequential read throughput per watt of a capacity-matched HDD configuration. Our strategy and execution are delivering results.
+
+我們目前正在大規模生產基於 G9 NAND 的 PCIe Gen6 高效能資料中心 SSD。我們的 122TB 高容量 SSD 得到了廣泛應用，其每瓦順序讀取吞吐量是同等容量 HDD 配置的 16 倍。我們的策略和執行正在取得成效。
+
+Our data center SSD market share increased for the fourth consecutive calendar year in 2025 to a new record. In fiscal Q2, data centers NAND revenues more than doubled sequentially, reaching a substantial new record, and we expect further growth in the quarter ahead. Micron's data center SSD portfolio is industry-leading, and we have secured a robust set of design wins across our customer base.
+
+2025年，我們的資料中心SSD市佔率連續第四年成長，創下新紀錄。在第二財季，資料中心 NAND 營收季增超過一倍，創下新的歷史新高，我們預計下一季將進一步成長。美光的資料中心 SSD 產品組合處於行業領先地位，我們在客戶群中獲得了大量設計訂單。
+
+We are now seeing NAND demand significantly in excess of our available supply for the foreseeable future. In calendar 2026, a number of factors, including DRAM and NAND supply constraints, could cause PC and smartphone units to decline in the low double-digit percentage range.
+
+目前，我們看到NAND快閃記憶體的需求將遠遠超過我們現有的供應量，這種情況在可預見的未來仍將持續。到 2026 年，包括 DRAM 和 NAND 供應限制在內的諸多因素可能會導致 PC 和智慧型手機的銷售量出現兩位數百分比的下降。
+
+Over time, we expect the value of on-device AI to drive strong memory content growth in PCs and smartphones. In PCs, there has been exciting innovation recently with Agentic AI applications such as OpenCloud, where AI agents can perform tasks independently on the host PC and also initiate workloads in the cloud. PCs with on-device Agentic AI capabilities have recommended memory configurations of at least 32 gigabyte, twice as much as the average PC.
+
+隨著時間的推移，我們預期設備端人工智慧的價值將推動個人電腦和智慧型手機記憶體容量的強勁成長。在個人電腦領域，最近出現了令人興奮的創新，例如 OpenCloud 等智慧型人工智慧應用，其中人工智慧代理可以在主機 PC 上獨立執行任務，還可以在雲端啟動工作負載。具備裝置端智慧AI功能的PC建議的記憶體配置至少為32GB，是一般PC的兩倍。
+
+Additionally, the fast-growing new category of personal AI workstations, such as NVIDIA DGX Spark and AMD Ryzen AI Halo, come in 128-gigabyte configurations, ideal for using large language models on device. Likewise, in smartphones, OEMs have recently announced new flagship devices such as Samsung Galaxy S26 and Google Pixel 10 with Agentic AI integrated into their mobile operating systems.
+
+此外，快速成長的新型個人 AI 工作站，如 NVIDIA DGX Spark 和 AMD Ryzen AI Halo，均採用 128 GB 配置，非常適合在裝置上使用大型語言模型。同樣，在智慧型手機領域，OEM廠商最近發布了新的旗艦設備，例如三星Galaxy S26和GooglePixel 10，這些設備在其行動作業系統中整合了智慧代理AI。
+
+The mix of flagship smartphones shipping with 12 gigabytes or more of DRAM increased to nearly 80% in calendar Q4, up from under 20% a year ago. Micron is well positioned to accelerate the opportunities in these markets with our industry-leading portfolio of products. In PC, Micron completed qualifications for LP Chem II at a major OEM.
+
+第四季度，配備 12 GB 或以上 DRAM 的旗艦智慧型手機佔比增至近 80%，而一年前這一比例還不到 20%。憑藉著業界領先的產品組合，美光已做好充分準備，加速掌握這些市場的機會。在 PC 領域，美光公司已完成大型 OEM 廠商的 LP Chem II 認證。
+
+At CS, we launched the industry's first Gen. 5 QLC client SSV based on G9 NAND. Micron's LP-DDR5X is now designed into leading personal AI workstations, expanding our addressable market with high volumes shipped to key customers. In smartphones, Micron continues to receive strong interest and feedback from OEM and ecosystem partners on our one-gamma-based LP-DDR6 samples.
+
+在 CS，我們推出了業界首款 Gen。5 QLC 客戶端 SSV 基於 G9 NAND。美光的 LP-DDR5X 現已應用於領先的個人 AI 工作站，透過向主要客戶大量出貨，擴大了我們的目標市場。在智慧型手機領域，美光基於單伽馬的LP-DDR6樣品持續受到OEM製造商和生態系統合作夥伴的濃厚興趣和正面回饋。
+
+We built momentum with additional qualifications and mass production of our 10.7 gigabit per second 1-gamma LPDDR 5x 16-gigabit product. We saw continued pricing improvement across automotive, industrial and embedded markets. Total AE/BU revenue reached a record with automotive and industrial revenue together exceeding $2 billion in the quarter.
+
+我們透過額外的認證和大規模生產每秒 10.7 千兆位元的 1-gamma LPDDR 5x 16 千兆位元產品，獲得了發展勢頭。我們看到汽車、工業和嵌入式市場的價格持續改善。本季AE/BU總營收創歷史新高，其中汽車和工業領域的收入總計超過20億美元。
+
+In automotive, OEMs are deploying Level 2+ ADAS across their fleets at an accelerating pace. The average car today has less than L2 ADAS capability, containing approximately 16 gigabyte of DRAM, while vehicles with L4 autonomy require over 300 gigabytes. As more advanced ADAS and smart cabin adoption scales, we expect robust long-term growth in automotive memory demand.
+
+在汽車領域，汽車製造商正在加速在其車隊中部署 L2+ ADAS。現今普通汽車的自動駕駛能力低於 L2 級，大約包含 16 GB 的 DRAM，而具備 L4 級自動駕駛功能的車輛則需要超過 300 GB 的 DRAM。隨著更先進的ADAS和智慧座艙的普及，我們預計汽車記憶體需求將實現強勁的長期成長。
+
+We have shared samples of the industry's first automotive-grade one-gamma LPDDR5 DRAM, and in NAND, we were first in the industry with a G9-based UFS 4.1 automotive solution, further reinforcing our technology leadership in this market. Rapid improvements in AI are supercharging the capabilities of robots.
+
+我們分享了業界首款汽車級單伽瑪LPDDR5 DRAM樣品，在NAND領域，我們率先推出了基於G9的UFS 4.1汽車解決方案，進一步鞏固了我們在該市場的技術領先地位。人工智慧的快速發展正在大大提升機器人的能力。
+
+We believe we are on the cusp of a 20-year growth vector in robotics and expect robotics to become one of the largest product categories in the technology world. Humanoid robots will be AI-enabled and will be powered by a compute platform that rivals that of a high-end L4-capable automobile, thus requiring significant memory and storage capacity.
+
+我們相信，我們正處於機器人技術20年快速增長期的開端，並預期機器人技術將成為科技界最大的產品類別之一。人形機器人將具備人工智慧功能，並由可與高階 L4 級汽車相媲美的運算平台驅動，因此需要大量的記憶體和儲存容量。
+
+We expect this exciting new category of growth to further underpin the long-term favorable dynamics that shape our industry environment. Micron is very well positioned to leverage this opportunity in close partnership with our customers, enabled by our industry-leading technology, product solutions and operational capabilities. Now turning to our market outlook.
+
+我們預計這個令人振奮的全新成長類別將進一步鞏固塑造我們產業環境的長期有利動態。憑藉我們行業領先的技術、產品解決方案和營運能力，美光與客戶緊密合作，完全有能力抓住這一機會。現在來談談我們的市場展望。
+
+We expect both DRAM and NAND industry bit demand in calendar 2026 to be constrained by supply. We continue to expect supply/demand conditions for both DRAM and NAND to remain tight beyond calendar 2026. We expect industry DRAM bit shipments in calendar 2026 to grow in the low 20s percentage range, slightly above our prior outlook.
+
+我們預計到 2026 年，DRAM 和 NAND 產業的位元需求都將受到供應的限制。我們預計，2026 年以後，DRAM 和 NAND 的供需狀況仍將保持緊張。我們預計 2026 年產業 DRAM 位元出貨量將成長 20% 左右，略高於我們先前的預期。
+
+In DRAM, cleanroom constraints and long construction lead times, higher HVM trade ratio, higher HVM growth rates and declining bids per wafer growth from node migrations constrained bid supply growth. We expect industry NAND bid shipments in calendar 2026 to grow approximately 20%.
+
+在 DRAM 領域，無塵室的限制和較長的建設週期、較高的 HVM 交易比率、較高的 HVM 成長率以及節點遷移導致的每片晶圓競價下降，都限制了競價供應的成長。我們預計 2026 年產業 NAND 快閃記憶體出貨量將成長約 20%。
+
+In NAND, some industry suppliers redirecting cleanroom space for DRAM and overall limited cleanroom space. Constrained bid supply growth. We expect Micron, DRAM and NAND supply to grow approximately in line with the industry in calendar 2026. Micron is working to address the unprecedented gap between supply and demand, and we achieved several important milestones in expanding our global manufacturing footprint this past quarter.
+
+在 NAND 領域，一些行業供應商將無塵室空間重新分配給 DRAM，而整體無塵室空間有限。投標供給增長受限。我們預計到 2026 年，美光、DRAM 和 NAND 的供應量將與產業整體成長大致持平。美光正在努力解決供需之間前所未有的差距，在上個季度，我們在擴大全球製造規模方面取得了幾個重要的里程碑。
+
+In DRAM, earlier this week, we announced the successful closing of the acquisition of the Tongluo site from Powerchip Semiconductor, completing the transaction ahead of schedule. We expect this site to support meaningful product shipments from the existing fab beginning in fiscal 2028. Adding to the existing fab, we plan to begin construction of a similar-sized second clean room at this site by the end of fiscal 2026.
+
+在 DRAM 方面，本週早些時候，我們宣布成功完成對 Powerchip Semiconductor 銅羅工廠的收購，並提前完成了交易。我們預計該廠址將從 2028 財年開始支援現有晶圓廠進行有意義的產品出貨。除了現有的工廠外，我們計劃在 2026 財年末之前在該廠址開始建造一個類似規模的第二個無塵室。
+
+We continue to expect initial wafer output at our first Idaho fab in mid-calendar 2027 and ground preparation has begun for our second Idaho fab. We broke ground on our first fab at the New York site and initial ground preparation activities are ahead of plan.
+
+我們仍然預計位於愛達荷州的第一家晶圓廠將於 2027 年年中開始投產，並且我們位於愛達荷州的第二家晶圓廠的場地準備工作已經開始。我們在紐約的工廠破土動工，目前場地準備工作進展順利，超前於計畫。
+
+In Japan, we are making good progress on ground preparation for our clean room expansion to enable future technology transitions in our Hiroshima site. In NAND, the combination of a higher demand outlook and our decision to co-locate R&D clean room in our manufacturing fab underpin our decision to break ground for a new NAND fab at our Singapore site.
+
+在日本，我們在廣島工廠無塵室擴建的場地準備工作方面取得了良好進展，這將為未來的技術轉型奠定基礎。在 NAND 領域，更高的需求前景以及我們決定將研發潔淨室設在製造工廠內，共同促成了我們在新加坡工廠破土動工建設新的 NAND 工廠。
+
+We expect initial wafer output from this fab in the second half of calendar 2028. In assembly and test, we commenced commercial shipments from our new facility in India. The state-of-the-art facility will be among the largest single-floor assembly and test clean rooms in the world. Our Singapore advanced packaging facility for HBM is on track to contribute meaningfully to Micron's HBM supply in calendar year 2027.
+
+我們預計晶圓廠將於 2028 年下半年開始投產。在組裝和測試方面，我們已開始從位於印度的新工廠進行商業發貨。這座最先進的設施將成為世界上最大的單層組裝和測試無塵室之一。我們在新加坡的先進 HBM 封裝工廠預計在 2027 年為美光的 HBM 供應做出重大貢獻。
+
+We expect fiscal 2026 CapEx to be above $25 billion. From our last earnings call estimate, the majority of the increase is driven by clean room facility-related CapEx, of which the largest factor is Tongluo, followed by construction spend increase in our US fab projects. We project our fiscal 2027 CapEx to step up meaningfully to support HVM and DRAM-related investments.
+
+我們預計 2026 財年的資本支出將超過 250 億美元。根據我們上次財報電話會議的預測，成長的大部分是由潔淨室設施相關的資本支出推動的，其中最大的因素是桐洛工廠，其次是我們在美國工廠項目的建設支出增加。我們預計 2027 財年的資本支出將大幅增加，以支持高產量製造和 DRAM 相關投資。
+
+We expect construction-related CapEx to increase by over $10 billion year-over-year in fiscal 2027 as we build out our global manufacturing sites to address long-term demand opportunities. In addition, we expect higher equipment spend year-over-year in fiscal 2027. As we make these investments, we will continue to be responsive to the market environment and our customer demand to appropriately align our supply plans.
+
+我們預計，隨著我們擴大全球製造基地以滿足長期需求，2027 財年與建設相關的資本支出將比上年增加 100 億美元以上。此外，我們預計 2027 財年設備支出將比上年增加。在進行這些投資的同時，我們將繼續對市場環境和客戶需求做出反應，以適當調整我們的供應計劃。
+
+I will now turn it over to Mark for our fiscal Q2 financial results and outlook.
+
+接下來我將把發言權交給馬克，請他介紹我們第二財季的財務表現和展望。
+
+Mark Murphy - Chief Financial Officer, Executive Vice President
+
+Mark Murphy - Chief Financial Officer, Executive Vice President
+
+Thank you, Sanjay, and good afternoon, everyone. Micron delivered strong financial results for the fiscal second quarter with revenue, gross margin and EPS, all exceeding the high end of our guidance. In fiscal Q2, we generated record free cash flow, reduced our debt, and closed the quarter with the highest net cash position in our history.
+
+謝謝你，桑傑，大家下午好。美光科技第二財季財務業績強勁，營收、毛利率和每股盈餘都超過我們預期的上限。在第二財季，我們創造了創紀錄的自由現金流，減少了債務，並以公司歷史上最高的淨現金部位結束了該季度。
+
+Total fiscal Q2 revenue was $23.9 billion, up 75% sequentially and up 196% year-over-year, representing our fourth consecutive quarterly revenue record. The $10.2 billion sequential increase is the largest in our history. Fiscal Q2 DRAM revenue was a record $18.8 billion, up 207% year-over-year and represented 79% of total revenue.
+
+第二財季總營收為 239 億美元，季增 75%，年增 196%，連續第四個季度創下營收紀錄。環比增長102億美元，這是我們歷史上最大的增幅。2020財年第二季DRAM營收創下188億美元的紀錄，年增207%，佔總營收的79%。
+
+Sequentially, DRAM revenue increased 74%. Pit shipments were up mid-single digits. Prices increased in the mid-60s percentage range, driven by tight industry conditions and included favorable mix. Fiscal Q2 NAND revenue was a record $5 billion, up 169% year-over-year and represented 21% of Micron's total revenue.
+
+DRAM 營收季增 74%。礦坑出貨量實現了個位數中段的成長。受行業形勢緊張和有利的產品組合影響，價格上漲了 60% 左右。2020財年第二季NAND快閃記憶體營收創下50億美元的紀錄，年增169%，佔美光總營收的21%。
+
+Sequentially, NAND revenue increased 82%. NAND bit shipments increased in the low single-digit percentage range. Prices increased in the high 70s percentage range, driven by tight NAND industry conditions and included favorable mix. The consolidated gross margin for fiscal Q2 was 75%, up 18 percentage points sequentially.
+
+NAND 營收季增 82%。NAND 快閃記憶體位出貨量以個位數百分比的低水準成長。受 NAND 產業市場緊張和有利的產品組合影響，價格上漲幅度在 70% 以上。第二財季綜合毛利率為75%，季增18個百分點。
+
+This improvement was driven primarily by higher pricing and also included favorable mix and cost performance. Fiscal Q2 gross margin nearly doubled from a year ago and was a company record. Now, turning to quarterly financial performance by business unit. Cloud memory business unit revenue was a record $7.7 billion and represented 32% of total company revenue.
+
+這項改善主要得益於更高的價格，同時也得益於有利的產品組合和成本效益。第二財季毛利率較上年同期幾乎翻了一番，創公司歷史新高。接下來，我們來看看各業務部門的季度財務表現。雲端儲存業務部門營收創下 77 億美元的紀錄，占公司總收入的 32%。
+
+CMBU revenue was up 47% sequentially, driven by an increase in prices and favorable mix. CMBU gross margins were 74%, higher by 9 percentage points sequentially, driven by higher pricing and cost execution. Core data center business unit revenue was a record $5.7 billion and represented 24% of total company revenue.
+
+CMBU 營收季增 47%，主要得益於物價上漲和產品組合優化。CMBU毛利率為74%，季增9個百分點，主要得益於更高的定價和成本控制。核心資料中心業務部門營收創下 57 億美元的紀錄，占公司總收入的 24%。
+
+CDBU gross margins were 74%, up 23 percentage points sequentially, driven by higher pricing and favorable mix. Mobile and client business unit revenue was a record $7.7 billion and represented 32% of total company revenue. MCBU revenue was up 81% sequentially, driven by higher pricing, partially offset by lower bit shipments.
+
+CDBU毛利率為74%，季增23個百分點，主要得益於更高的定價和有利的產品組合。行動和客戶端業務部門的收入創下 77 億美元的紀錄，占公司總收入的 32%。MCBU 營收季增 81%，主要得益於更高的定價，但部分被較低的比特出貨量所抵消。
+
+MCBU gross margins were 79%, up 25 percentage points sequentially, driven primarily by higher pricing and favorable mix. Automotive and embedded business unit revenue was a record $2.7 billion and represented 11% of total company revenue. AEBU revenue was up 57% sequentially, driven by higher pricing, partially offset by lower bid shipments.
+
+MCBU毛利率為79%，季增25個百分點，主要得益於更高的定價和有利的產品組合。汽車和嵌入式業務部門的收入創下 27 億美元的紀錄，占公司總收入的 11%。AEBU 的營收季增 57%，主要得益於更高的定價，但部分被較低的投標出貨量所抵銷。
+
+AEBU gross margins were 68%, up 23 percentage points sequentially, driven primarily by higher pricing. Operating expenses in fiscal Q2 were $1.4 billion, up $87 million quarter-over quarter. The sequential increase was driven by higher R&D expenses. We generated operating income of $16.5 billion in fiscal Q2, resulting in an operating margin of 69%. Up 22 percentage points sequentially and 44 percentage points year-over-year.
+
+AEBU 毛利率為 68%，季增 23 個百分點，主要得益於更高的定價。第二財季的營運支出為 14 億美元，比上一季增加了 8,700 萬美元。研發支出增加是推動研發成本較上季成長的主要因素。我們在第二財季實現了 165 億美元的營業收入，營業利益率為 69%。環比上升 22 個百分點，較去年同期成長 44 個百分點。
+
+Fiscal Q2 taxes were $2.5 billion on an effective tax rate of 15.1%. Non-GAAP diluted earnings per share in fiscal Q2 was $12.20. With 155% sequential growth and 682% growth versus the year-ago quarter. Turning to cash flow and capital expenditures, in fiscal Q2, operating cash flows were $11.9 billion.
+
+財政年度第二季稅收為 25 億美元，實際稅率為 15.1%。第二財季非GAAP稀釋後每股盈餘為12.20美元，季增155%，較去年同期成長682%。再來看現金流和資本支出，在第二財季，營運現金流為 119 億美元。
+
+Capital expenditures were $5 billion, resulting in free cash flow of $6.9 billion. Fiscal Q2 free cash flow was a quarterly record for the company, exceeding our prior record in fiscal Q1 2026 by 77%. Ending inventory for fiscal Q2 was $8.3 billion, up $62 million sequentially, with days of inventory at 123. DRAM inventory days remain especially tight and below 120 days.
+
+資本支出為 50 億美元，產生的自由現金流為 69 億美元。2026 財年第二季自由現金流創下公司季度紀錄，比 2026 財年第一季的紀錄高出 77%。第二財季末庫存為 83 億美元，季增 6,200 萬美元，庫存週轉天數為 123 天。DRAM庫存週轉天數仍然非常緊張，低於120天。
+
+We reached record levels of cash and investments of $16.7 billion at quarter end and had liquidity over $20 billion when including our untapped credit facility. In fiscal Q2, we repurchased $350 million of shares as permitted by the terms of the CHIPS agreement.
+
+截至季末，我們的現金和投資達到創紀錄的 167 億美元，加上未動用的信貸額度，流動資金超過 200 億美元。在第二財季，我們根據 CHIPS 協議的條款回購了價值 3.5 億美元的股票。
+
+During the quarter, we also reduced debt by $1.6 billion, including redemption of senior notes maturing in 2029 and 2030. The weighted average maturity on our outstanding debt is August 2034. We closed the quarter with $10.1 billion of debt and a net cash balance of $6.5 billion.
+
+本季度，我們也減少了 16 億美元的債務，其中包括贖​​回將於 2029 年和 2030 年到期的優先票據。我們未償債務的加權平均到期日為 2034 年 8 月。本季末，我們的債務為 101 億美元，淨現金餘額為 65 億美元。
+
+Reinvesting in the profitable growth of our business across R&D, CapEx, and other strategic investments remains our top priority for capital allocation. We are committed to maintaining a strong balance sheet, have reduced our total debt by over $5 billion in the last three quarters, and are at our strongest net cash position ever.
+
+將資金再投資於研發、資本支出和其他策略性投資，以促進業務的獲利成長，仍然是我們資本配置的首要任務。我們致力於維持穩健的資產負債表，在過去三個季度中已減少了超過 50 億美元的總債務，並且目前處於有史以來最強勁的淨現金狀況。
+
+Reflecting the sustained strength of our technology leadership and cash generation, as Sanjay mentioned, the Board has approved a 30% increase in our quarterly dividend to $0.15 per share. Now turning to our guidance, we expect fiscal Q3 revenue to be a record $33.5 billion, plus or minus $750 million.
+
+正如桑傑所提到的，鑑於我們在技術領先地位和現金流方面的持續優勢，董事會已批准將季度股息提高 30%，至每股 0.15 美元。現在來看看我們的業績預期，我們預計第三財季營收將達到創紀錄的 335 億美元，上下浮動 7.5 億美元。
+
+Gross margin to be approximately 81% and operating expenses to be approximately $1.4 billion. Based on a share count of approximately 1.15 billion shares, we expect EPS to be a record $19.15 per share, plus or minus $0.40. We expect higher price, lower cost, and favorable mix to all contribute to gross margin expansion in Q3.
+
+毛利率約 81%，營運費用約 14 億美元。基於約11.5億股的股本，我們預期每股盈餘將創下19.15美元的歷史新高，上下浮動0.40美元。我們預計更高的價格、更低的成本和有利的產品組合都將有助於第三季毛利率的提升。
+
+As mentioned last quarter, Micron's fiscal Q4 2026 OpEx will also reflect the effect of an additional workweek in this 53 week fiscal year. We expect to increase our fiscal 2027 OpEx as we ramp R&D investments in support of an unprecedented set of long-term opportunities in memory and storage.
+
+如同上個季度所提到的，美光2026財年第四季的營運支出也將反映出本財年（53週）中額外增加一週工作日的影響。我們預計，隨著我們加大研發投入以支援記憶體和儲存領域前所未有的長期機遇，2027 財年的營運支出將會增加。
+
+We expect a fiscal Q3 and fiscal year 2026 tax rate of around 15.1%. Micron continues to invest in a disciplined manner across our global footprint. To address customer demand, as mentioned earlier, we now project our capital spending in fiscal 2026 to be above $25 billion.
+
+我們預計 2026 財年第三季和全年的稅率約為 15.1%。美光科技將繼續以嚴謹的方式在全球進行投資。為了滿足客戶需求，如前面提到的，我們現在預計 2026 財年的資本支出將超過 250 億美元。
+
+In fiscal Q3, we project CapEx of approximately $7 billion, while delivering significantly higher free cash flow on stronger operating cash flow. Due to the need for cleanroom capacity, we expect our construction spend growth rate to outpace equipment spend growth in both fiscal 2026 and fiscal 2027. Any impacts that may occur due to trade or geopolitical developments are not included in our guidance.
+
+在第三財季，我們預計資本支出約為 70 億美元，同時由於營運現金流強勁，自由現金流將顯著提高。由於無塵室容量的需求，我們預計在 2026 財年和 2027 財年，我們的建築支出成長率將超過設備支出成長率。貿易或地緣政治發展可能造成的任何影響均不包含在我們的指導方針中。
+
+I'll now turn it over to Sanjay to close.
+
+現在我把收尾工作交給桑傑。
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+Thank you, Mark. Decades of investment in innovation and execution has established Micron as a technology leader in memory and storage and as one of the semiconductor industry's biggest beneficiaries and enablers of AI. As the only U.S.-based manufacturer of advanced memory products, Micron is uniquely positioned to capitalize on the unprecedented opportunities ahead.
+
+謝謝你，馬克。數十年來，美光科技在創新和執行方面持續投入，使其成為記憶體和儲存領域的技術領導者，也是半導體產業人工智慧領域最大的受益者和推動者之一。身為美國唯一生產先進記憶體產品的製造商，美光科技擁有得天獨厚的優勢，能夠抓住未來前所未有的機會。
+
+I want to thank our team members worldwide, whose execution made this outstanding quarter possible. As strong as these results are, I'm even more excited about what's ahead for Micron. We will now open for questions. Thank you.
+
+我要感謝我們全球的團隊成員，正是他們的努力和執行，才使得這個季度取得如此優異的成績。儘管這些結果已經非常出色，但我對美光科技的未來更加充滿期待。現在開始接受提問。謝謝。
+
+Operator
+
+Operator
+
+(Operator Instructions)
+
+（操作說明）
+
+Krish Sankar, TD Cowen.
+
+Krish Sankar，TD Cowen。
+
+Krish Sankar - Analyst
+
+Krish Sankar - Analyst
+
+The 81% gross margin guide is very impressive. Just kind of curious how to think about the sustainability of gross margins, especially as you bring more HBM4 into the mix. So if you can give some further on how to think about gross margins in the August quarter and beyond, that would be very helpful and have a follow-up for Sanjay.
+
+81%的毛利率預期非常亮眼。我只是有點好奇如何看待毛利率的可持續性，尤其是在將更多 HBM4 引入其中的情況下。所以，如果您能進一步闡述如何看待八月季度及以後的毛利率，那將非常有幫助，我也會就此向 Sanjay 提出後續問題。
+
+Mark Murphy - Chief Financial Officer, Executive Vice President
+
+Mark Murphy - Chief Financial Officer, Executive Vice President
+
+So, Krish this is Mark. So we provided a strong guide of 600 basis points, sequentially into the third quarter. We're not going to provide the fourth quarter gross margin guidance. However, we have indicated that market conditions we expect to remain tight beyond '26, so clearly beyond the fourth quarter.
+
+克里什，這位是馬克。因此，我們給出了強勁的指引，第三季較上季下降 600 個基點。我們不會提供第四季毛利率預期。然而，我們已經表明，我們預計市場狀況在 2026 年後仍將保持緊張狀態，顯然會持續到第四季之後。
+
+We -- what you're seeing reflected in our gross margin is. The benefits of AI driving a multi-year investment cycle, most of which is ahead of us, and AI requires more high-performance, more memory and more high-performance memory, and that's reflected in the margins. Also, we've talked about supply factors, and those are.
+
+我們—您在我們的毛利率中看到的就是這一點。人工智慧帶來的好處推動了多年的投資週期，其中大部分還在未來，而且人工智慧需要更高效能、更多記憶體和更多高效能內存，這反映在利潤率上。此外，我們也討論過供應因素，這些因素包括：
+
+Going to continue beyond '26. The 81% contemplates a growth in HBM4, but we expect, as I mentioned, market conditions to be strong. Now, keep in mind that as we as at these gross margin levels, incremental increase in price is going to have less of an effect on gross margin. But beyond that, we're not providing a fourth quarter gross margin.
+
+將繼續到2026年後。81% 的人認為 HBM4 將會成長，但正如我之前提到的，我們預期市場狀況將保持強勁。請記住，在目前的毛利率水準下，價格的逐步上漲對毛利率的影響較小。但除此之外，我們不提供第四季的毛利率數據。
+
+Krish Sankar - Analyst
+
+Krish Sankar - Analyst
+
+Got it. Thanks for that, Mark. And then a quick question for Sanjay on the SCA. Congrats on your first five-year SCA. How different is it from the LTA? Is this a multi-year volume and price commitment or does the price get negotiated every year? And also how to think about cancellation terms in the SCA in case the cycle slows down during the time frame.
+
+知道了。謝謝你，馬克。然後，我向Sanjay問一個關於SCA的問題。恭喜您獲得第一個五年SCA認證。它與LTA有何不同？這是多年期的銷售和價格承諾，還是每年重新協商價格？此外，還應考慮在 SCA 中，如果交易週期在約定期限內放緩，取消條款該如何規定。
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+So thank you for recognizing us for the first SCA that we have completed here. And as you noted, SCA is multi-year agreement, and we noted that in our remarks as well. LTAs have tended to be typically one-year agreement.
+
+感謝你們認可我們在這裡完成的第一個SCA專案。正如您所指出的，SCA 是一項多年期協議，我們在發言中也提到了這一點。長期協議通常為一年期協議。
+
+And of course, in this environment of extremely tight. Apply outlook in the foreseeable timeframe as well. Of course, our customers are very motivated in order for their own planning purposes and for their better predictability to have these structural strategic agreements with us.
+
+當然，在這種極度緊張的環境下。在可預見的未來，也應考慮這種展望。當然，為了自身的規劃和提高預測能力，我們的客戶非常有動力與我們簽訂這些結構性策略協議。
+
+And of course, these agreements are really meant to bring stability and get a greater visibility into our business model as well. We have completed one SCA. So we are not going to be getting into the specifics here of these agreements. I'm sure you can appreciate that these FCAs are confidential in nature.
+
+當然，這些協議的真正目的是為了帶來穩定性，並讓公眾更清楚地了解我們的商業模式。我們已經完成了一項SCA。因此，我們在這裡就不深入探討這些協議的具體細節了。我相信您能夠理解這些FCA（金融行為監理局）的保密性質。
+
+But of course, these FCAs are meant to achieve the objectives for the customers in terms of their ability to plan and be able to count on supply commitments that are in the agreements, but also for us to be able to count on specific commitments that are there from the customers.
+
+當然，這些 FCA 的目的是為了實現客戶的目標，即客戶能夠進行計劃並能夠依靠協議中規定的供應承諾，同時也是為了讓我們能夠依靠客戶的具體承諾。
+
+And, these are meant to go across the periods when the industry is very tight versus other parts of the industry environment as well. So that's why they are long-term agreements and they have robust terms in them -- robust terms in them for us as well as for our customers.
+
+而且，這些措施旨在應對行業競爭非常激烈的時期，並與其他行業環境相協調。所以這就是為什麼這些都是長期協議，而且條款非常完善——對我們和我們的客戶來說都是非常完善的條款。
+
+Krish Sankar - Analyst
+
+Krish Sankar - Analyst
+
+Got it. Thank you very much.
+
+知道了。非常感謝。
+
+Operator
+
+Operator
+
+Joseph Moore, Morgan Stanley.
+
+約瑟夫‧摩爾，摩根士丹利。
+
+Joseph Moore - Analyst
+
+Joseph Moore - Analyst
+
+Allocation questions by end market. Obviously, the AI is the area that has the most urgency, but do you worry about demand destruction for things like PCs and smartphones? Are you trying to balance big customer, small customer? Just how are you thinking about that allocation process?
+
+按終端市場劃分的分配問題。顯然，人工智慧是最迫切的領域，但您是否擔心個人電腦和智慧型手機等產品的需求會因此而下降？您是否試圖平衡大客戶和小客戶的需求？您是如何考慮分配方案的？
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+I mean, clearly supply is extremely tight and supply is tight across all end markets. Demand trends are strong across the end markets, while price sensitive markets such as the consumer examples that you gave may have some demand that is getting impacted due to the higher prices, but overall demand in those markets as well stayed really strong.
+
+我的意思是，很明顯，供應非常緊張，所有終端市場的供應都很緊張。終端市場的需求趨勢強勁，而像你提到的消費者這類價格敏感型市場，由於價格上漲，部分需求可能會受到影響，但這些市場的整體需求仍然非常強勁。
+
+And our goal and strategy always is to be a diversified supplier to our various end markets. I think that is very important for us. Of course, data center is becoming a bigger and bigger part of the industry TAM. So of course, a bigger portion of the supply goes there, and that's the main driver of growth for the industry as well as for Micron results.
+
+我們的目標和策略始終是成為各個終端市場的多元化供應商。我認為這對我們來說非常重要。當然，資料中心在產業總市場中所佔的份額越來越大。因此，更大比例的供應流向了那裡，這也是推動行業成長以及美光業績成長的主要動力。
+
+But other parts of the markets are important to us, such as PCs, such as smartphone, automotive, of course. Industrial, and we want to maintain that well-diversified mix for our end markets. And I would just like to point out that overall, in data center or in the consumer parts of the market, such as smartphone or PCs, the AI trend is continuing to drive greater and greater requirement for memory content.
+
+但其他市場領域對我們來說也很重要，例如個人電腦、智慧型手機、汽車等等。工業領域，我們希望為我們的終端市場保持這種多元化的產品組合。我只想指出，總體而言，無論是在資料中心還是在智慧型手機或個人電腦等消費市場領域，人工智慧的發展趨勢都在不斷推動對記憶體內容的需求日益增長。
+
+Of course, customers are working in this tight supply environment to manage the mix of their products, but overall, we are very much working with customers across our end markets.
+
+當然，在當前供應緊張的環境下，客戶都在努力管理其產品組合，但總的來說，我們正在與終端市場的客戶進行密切合作。
+
+Joseph Moore - Analyst
+
+Joseph Moore - Analyst
+
+Grea. Thank you. And I think in the past, you've sort of said that some customers are getting 70% of what they're asking for. Is that still kind of the ballpark of what you're dealing with? Are their customers higher, lower than that than they were three months ago?
+
+格雷亞。謝謝。而且我認為你過去曾說過，有些客戶只能得到他們所要求的 70%。你遇到的情況仍然大致如此嗎？他們的客戶數量比三個月前增加了還是減少了？
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+Yeah, what we have said is in the last earnings call that some of our key customers are we are able to fulfill only 50% to two-thirds of their demand in the medium term. And yes, that still remains the case.
+
+是的，我們在上次財報電話會議上說過，在中期內，我們只能滿足一些主要客戶 50% 到三分之二的需求。是的，情況依然如此。
+
+Joseph Moore - Analyst
+
+Joseph Moore - Analyst
+
+Great. Thank you. Great quarter.
+
+偉大的。謝謝。很棒的季度。
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+Thank you.
+
+謝謝。
+
+Operator
+
+Operator
+
+Timothy Arcuri.
+
+蒂莫西·阿庫裡。
+
+Timothy Arcuri - Analyst
+
+Timothy Arcuri - Analyst
+
+Thanks a lot. Sanjay, I also wanted to ask about the SCAs. Can you give -- I think we're all trying to sort of think on the to the other side of the cycle and hope that these SCAs provide some mechanism that will kind of limit your gross margin on the downside to a certain number.
+
+多謝。Sanjay，我還想問一下關於SCA的問題。你能給——我認為我們都在努力思考週期的另一面，並希望這些補充信貸協議能夠提供某種機制，將你的毛利率下行幅度限制在一定範圍內。
+
+So I know you don't want to give too many details, but is it fair to say that there is a mechanism in these SCAs that would limit your gross margin on the downside when things do finally roll back over?
+
+我知道您不想透露太多細節，但可以這樣說嗎？這些 SCA 中是否存在某種機制，會在情況最終好轉時限制您的毛利率下降？
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+So, certainly not getting into the specifics of these SCAs for the obvious reasons of confidentiality of these agreements. We have done successfully completed one SCA. We are in discussions with multiple other customers. And if and when we complete these agreements and as appropriate, we will, of course, share further details with you.
+
+因此，基於這些協議保密性的顯而易見的原因，我們當然不會深入探討這些支持合約的具體細節。我們已經成功完成了一項SCA。我們正在與其他幾家客戶進行洽談。如果這些協議最終達成，我們當然會在適當的時候與您分享更多細節。
+
+But what I want to highlight is that these SCAs are multi-year, and they have specific commitments in them and beyond and these are robust agreements. And of course, these are meant to absolutely give us the visibility and stability toward our business model. Beyond that, really, I cannot get into any specifics at this point.
+
+但我想強調的是，這些支持合作協議都是多年期的，其中包含具體的承諾，而且這些協議內容廣泛且具有約束力。當然，這些措施旨在為我們的商業模式提供清晰的視野和穩定性。除此之外，目前我真的無法透露任何具體細節。
+
+Timothy Arcuri - Analyst
+
+Timothy Arcuri - Analyst
+
+And then, Mark, I mean, I just had a question about cash. So you're going to generate, I don't know, $35 billion, $40 billion in free cash flow this fiscal year. You're going to probably have more than $50 billion in cash by the end of the calendar year. So what do you do with this?
+
+然後，馬克，我的意思是，我剛才有個關於現金的問題。所以，你們本財年將產生，我不知道，350億美元，400億美元的自由現金流。到年底，你的現金儲備可能會超過500億美元。那麼，你打算如何處理這個呢？
+
+Are you planning to like set aside a bunch of it to sort of buy back a bunch of stock on the other side? And I guess with respect to that, you do have restrictions on the repo from the money you took from the CHIPS Act. Is there any way to get that reworked?
+
+你打算撥出一部分資金，用來回購另一邊的股票？我想，就此而言，你從 CHIPS 法案中獲得的資金對回購確實存在一些限制。有什麼辦法可以修改嗎？
+
+Mark Murphy - Chief Financial Officer, Executive Vice President
+
+Mark Murphy - Chief Financial Officer, Executive Vice President
+
+Yeah, Tim. So we're thrilled with the performance of the business and the improvement in the balance sheet and in the second quarter with record net cash and record free cash flow, beating the previous quarter's record by 77%. Our third quarter guide, when you take those numbers and consider the CapEx we gave.
+
+是的，提姆。因此，我們對公司業績和資產負債表的改善感到非常興奮，第二季淨現金和自由現金流均創歷史新高，比上一季的記錄高出 77%。我們的第三季業績指引，結合這些數據以及我們給予的資本支出，得出以下結論。
+
+We could see cash flow double roughly sequentially. We're going to continue to build on the balance sheet strength and improve our net cash position. We're continuing to delever and pay down debt. Noteworthy that we received two credit upgrades in the quarter, so we're now a solid BBB.
+
+我們預計現金流將較上季翻一番。我們將繼續增強資產負債表的穩健性，並改善我們的淨現金狀況。我們將繼續降低槓桿率並償還債務。值得注意的是，我們本季獲得了兩次信用評級提升，因此我們現在是一家信譽良好的 BBB 級企業。
+
+So we're getting stronger, while, as you can see, we've talked about increasing our CapEx investment and increasing our R&D investment. [Nadia], your specific question on balance sheet priority or capital allocation, balance sheet is always going to be a priority along with organic investment in our business to advance technology and to put in capacity for value-add bits, which we certainly see now.
+
+所以，我們的實力正在增強。正如你所看到的，我們已經討論過增加資本支出和研發投入。 [Nadia]，你問到資產負債表優先事項或資本配置的問題，資產負債表始終是我們的優先事項，同時我們也會進行業務內部投資，以推進技術發展並提升增值能力，而我們現在確實看到了這一點。
+
+And generating return on capital at this point over 30%, headed toward 50%. We're going to remain disciplined there though. And then you saw today, we're pleased to announce a dividend increase of 30%, reflects the confidence we have in our business, outlook stability of the business and cash returns in the future.
+
+目前資本回報率超過 30%，正朝著 50% 邁進。不過，我們在這方面仍將保持紀律性。今天，我們很高興地宣布股息增加 30%，這反映了我們對公司業務、業務前景穩定性和未來現金回報的信心。
+
+And then as you said, we will have, we believe significant capacity then for returning cash to shareholders to repurchase combination of offsetting dilution from stock comp and then opportunistically repurchasing.
+
+正如您所說，我們相信屆時將有相當大的能力向股東返還現金，用於回購股票，以抵消股票補償帶來的稀釋，並伺機回購。
+
+Operator
+
+Operator
+
+CJ Muse, Cantor Fitzgerald.
+
+CJ Muse，坎托·菲茨杰拉德。
+
+CJ Muse - Analyst
+
+CJ Muse - Analyst
+
+Good afternoon. Thanks for taking the question. I wanted to follow up again, STA question. So you've had an evolution here, LTAs, binding, now SCAs. I'm curious if you could kind of discuss the breadth of the different customers that you're speaking with. Is it only hyperscale or are there others that are interested in.
+
+午安.感謝您回答這個問題。我想再次跟進STA的問題。所以這裡經歷了演變，從 LTA、結合，到現在的 SCA。我很好奇您能否談談您正在接觸的客戶群的廣泛性。只有超大規模企業有興趣嗎？還是也有其他企業感興趣？
+
+And I know you don't want to go into specific details on the contract, but just to follow-up on the last question. Is there any CapEx forward requirements tied to these agreements? Are there pricing tied to an ROIC on those investments? Any help there would be helpful.
+
+我知道您不想透露合約的具體細節，但為了跟進上一個問題。這些協議是否包含任何資本支出預期要求？這些投資的定價是否與投資報酬率 (ROIC) 掛鉤？任何幫助都將不勝感激。
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+So we'll share with you that the CA that we just have signed is with a large customer and of course, these agreements are very much focused on allowing us to invest with confidence in our future supply plans and of course, also just having specific terms that enable us to have overall better visibility into the future demand and as I said earlier, enable stability around the business model as well.
+
+因此，我們要告訴大家，我們剛剛簽署的合作協議是與一家大客戶簽署的。當然，這些協議的重點在於讓我們能夠對未來的供應計劃充滿信心地進行投資，當然，也包括一些具體的條款，使我們能夠更好地了解未來的需求，正如我之前所說，還能確保商業模式的穩定性。
+
+And CJ, beyond that, really, we are not commenting on the SEAs other than we'll say that, of course, as I mentioned earlier, these SEA discussions are proceeding with multiple customers and yes, these are. Across multiple markets as well.
+
+除此之外，CJ，我們真的不打算對SEA發表評論，但我們想說的是，當然，正如我之前提到的，這些SEA討論正在與多個客戶進行，是的，這些是。也遍及多個市場。
+
+CJ Muse - Analyst
+
+CJ Muse - Analyst
+
+Very helpful. And then I guess as a quick follow-up for HDM. I think you guided last quarter 40% growth CAGR, which would suggest roughly $50 billion in revenues for the market this year. Has that number changed? And are you seeing any sort of kind of preference for perhaps moving this to D5 over HDM by any industry players given today the higher margins that we see there. Thanks so much.
+
+很有幫助。然後我想快速跟進HDM。我認為您上個季度預測的複合年增長率為 40%，這意味著今年市場收入約為 500 億美元。這個數字變了嗎？鑑於目前D5的利潤率更高，您是否看到任何業內人士傾向於將這種技術從HDM轉移到D5？非常感謝。
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+So, yes, it is correct that the margins for non-HBM today are higher than HBM margins. Demand for HBM, of course, continues to be strong. We have not updated the numbers that we had provided last in terms of the outlook for the HBM TAM. Of course, the demand for DDR5, LP, and HBM, all of them continue to be strong in the data center.
+
+所以，沒錯，目前非 HBM 的利潤率確實高於 HBM 的利潤率。當然，對人類血小板的需求依然強勁。我們沒有更新上次提供的 HBM TAM 前景資料。當然，資料中心對 DDR5、LP 和 HBM 的需求依然強勁。
+
+And we, of course, continue to manage the mix of the business as the data center AI demand continues to grow. And as I said earlier, we, of course, outside of data center, we are very much focused on making sure that we are maintaining relevant share in our key other market segments as well.
+
+當然，隨著資料中心人工智慧需求的持續成長，我們將繼續調整業務組合。正如我之前所說，當然，除了資料中心之外，我們也非常注重確保在其他主要市場領域保持相關的市場份額。
+
+So we are overall in this environment of strong AI demand trends across data center to the edge, we are very much focused on continuing to manage our portfolio and we see strong growth opportunity for the full portfolio of microns in the data center.
+
+因此，在目前從資料中心到邊緣的強勁人工智慧需求趨勢下，我們非常注重繼續管理我們的產品組合，並且我們看到了美光在資料中心領域的完整產品組合的強勁成長機會。
+
+And I'll just point out there that portfolio is about HBM, it's about ALP, it's about SOCAM, it's about DDR. R5, as well as our data center SSDs, which have made tremendous strides in terms of our share, market share in data center SSDs over the course of last few years.
+
+我還要指出，該投資組合涉及 HBM、ALP、SOCAM 和 DDR。R5 以及我們的資料中心 SSD，在過去幾年中，我們在資料中心 SSD 的市佔率方面取得了巨大的進步。
+
+Operator
+
+Operator
+
+Harlan Sur, JPMorgan.
+
+哈蘭‧蘇爾，摩根大通。
+
+Harlan Sur - Analyst
+
+Harlan Sur - Analyst
+
+Good afternoon, and congratulations on the solid results and strong quarterly execution. Maybe, Sanjay, to carry on from where you left off on your commentary on SSD. On the November quarter of last year, I estimated that your enterprise SSD business was almost half of your total flash business, right? I think it was up like 60% sequentially. Obviously, a very favorable mix shift from a margin perspective for the Micron team.
+
+下午好，祝賀你們取得了穩健的業績和強勁的季度執行力。或許，桑傑，可以繼續你之前對 SSD 的評論。去年11月季度，我估計貴公司的企業級固態硬碟業務幾乎占到快閃記憶體業務總量的一半，對嗎？我認為它環比上漲了大約 60%。顯然，從利潤率的角度來看，這對美光團隊來說是一次非常有利的產品組合調整。
+
+And as you mentioned, you remain a strong top three global supplier of ESSD. Off of that strong number, it looks like your ESSD business doubled sequentially in the February quarter, still 50% of the NAND mix. Looking forward, with the G9 node continuing to ramp your next generation ESSDs, performance optimized, capacity optimized, mainstream, all on G9.
+
+正如您所提到的，您仍然是全球前三大 ESSD 供應商之一。根據這一強勁的數字來看，您的 ESSD 業務在 2 月季度環比翻了一番，仍然佔 NAND 組合的 50%。展望未來，隨著 G9 節點的持續發展，您的下一代 ESSD 將實現效能最佳化、容量最佳化、主流化，所有這些都基於 G9。
+
+Does this give the team a runway to continue to drive sequential growth in ESSD through the remainder of this calendar year and into next year? And then I just wanted to get your thoughts on this new proposed memory tier of high bandwidth flash. Is this an area where the Micron team might start to focus on R&D resources?
+
+這是否能讓團隊有足夠的動力，在今年剩餘的時間裡以及明年繼續推動 ESSD 的持續成長？然後，我想聽聽您對這種新型高頻寬快閃記憶體儲存層級的看法。這是美光團隊可能開始集中研發資源的領域嗎？
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+So regarding your question on data center SSDs, of course, this is an area of strong growth ahead and NAND supply stays strong I mean, NAND supply is very tight and the demand for NAND stays strong and data center SSDs are a big driver of NAND growth here as well.
+
+所以關於你提出的資料中心固態硬碟的問題，當然，這是一個未來成長強勁的領域，NAND 供應仍然強勁。我的意思是，NAND 供應非常緊張，對 NAND 的需求依然強勁，資料中心固態硬碟也是 NAND 成長的重要驅動力。
+
+And Micron is well positioned with our portfolio of SSDs, really going across the requirements in terms of capacity as well as performance across the various customers using TLC as well as QLC with respect to our data center mix. So very well positioned with this and this is as part of our strategy of continuing to shift our portfolio, our revenue mix toward higher profit pools of the industry and high-value parts of the market.
+
+美光憑藉其固態硬碟產品組合佔據了有利地位，真正滿足了使用 TLC 和 QLC 的各種客戶在容量和性能方面的需求，尤其是在資料中心產品組合方面。因此，我們在這方面處於非常有利的地位，這也是我們策略的一部分，即繼續調整我們的投資組合和收入結構，使其轉向行業中利潤更高的領域和市場中高價值的部分。
+
+We, of course, will continue to address opportunities for growing our SSD business. We feel really good about the trajectory that we have been on with data center SSD and the trajectory that is planned ahead for us as well. And regarding your question on HPF, high-bandwidth flash here, so of course, high-bandwidth flash has some positive attributes.
+
+當然，我們將繼續尋求發展固態硬碟業務的機會。我們對資料中心 SSD 的發展軌跡以及未來規劃的發展軌跡都感到非常滿意。至於你提到的 HPF，這裡指的是高頻寬閃存，所以高頻寬快閃記憶體當然有一些正面的特性。
+
+Such as capacity, but it has limitations that NAND has, such as ride speed, as well as power and retention. Therefore, there will be potentially some workloads here where this may be a possible solution, but it is really early and what is needed, of course, is engagement with the customers here in terms of really understanding the business value proposition of HBF, but we, of course, continue to study this.
+
+例如容量，但它也有 NAND 快閃記憶體的局限性，例如讀寫速度、功耗和資料保持能力。因此，對於某些工作負載而言，這可能是可行的解決方案，但現在還處於早期階段，當然，我們需要與客戶進行溝通，真正了解 HBF 的商業價值主張，但我們當然會繼續研究這個問題。
+
+Harlan Sur - Analyst
+
+Harlan Sur - Analyst
+
+No, I appreciate that. And then how much of these multi-year SCA agreements is due to the sort of inherent requirements for earlier and longer-term engagement with your GPU/XPU chip customers just due to the customization of their next-generation HBM architectures, right, especially around the base die?
+
+不，我很感激。那麼，這些多年期 SCA 協定中有多少是由於與 GPU/XPU 晶片客戶進行更早、更長期合作的固有要求，僅僅是因為需要自訂他們的下一代 HBM 架構，尤其是在基礎晶片方面？
+
+And given the 12 to 18-month design cycle times for these custom base dies, the sharing of IP between you and your chip customers and optimizing the base. To your process flow, right, it does imply that they have to engage with you much earlier in the design phase for their GPUs and XPUs. Is this another factor driving these multi-year SCAs?
+
+考慮到這些客製化基礎晶片的設計週期為 12 至 18 個月，您和您的晶片客戶之間需要共享 IP 並優化基礎晶片。對你們的流程來說，這確實意味著他們在 GPU 和 XPU 的設計階段必須更早與你們溝通。這是導致這些多年期供應鏈協議的另一個因素嗎？
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+Again, we are not really getting into the specifics, not getting into the specific type of customers here as well. But what I will definitely tell you is that, yes, these SCAs really bring us closer to the customer in terms of customer as well as our partnership.
+
+再次聲明，我們這裡不打算深入探討細節，也不打算探討具體的客戶類型。但我可以肯定地告訴你們，是的，這些 SCA 確實拉近了我們與客戶之間的距離，無論是在客戶關係方面還是在合作夥伴關係方面。
+
+And that partnership, of course, extends into bringing us closer in terms of R&D, collaboration, and roadmap planning, both ours as well as for customers. So that's definitely one of the benefits of these SCAs as well.
+
+當然，這種夥伴關係也延伸到讓我們在研發、合作和路線圖規劃上更緊密地連結在一起，這既包括我們自己的，也包括客戶的。所以這無疑也是這些安全合約協議的優點之一。
+
+Harlan Sur - Analyst
+
+Harlan Sur - Analyst
+
+Thank you.
+
+謝謝。
+
+Operator
+
+Operator
+
+Tom O'Malley, Barclays.
+
+湯姆·奧馬利，巴克萊銀行。
+
+Tom O'Malley - Analyst
+
+Tom O'Malley - Analyst
+
+Hey guys. Thanks for taking the questions and really nice results. So GTC and OFC this week, I think there's a lot of conversation just around the LPU architecture and the increased use of SRAM. Could you talk about your view on the memory market longer-term as you see more workloads relying on other types of memory. Outside of the HBM that you're already using?
+
+嘿，大家好。感謝您回答問題，結果非常好。所以，在本週的 GTC 和 OFC 會議上，我認為有很多討論都圍繞著 LPU 架構和 SRAM 的更多使用。您能否談談您對記憶體市場長期發展的看法，因為您認為越來越多的工作負載將依賴其他類型的記憶體？除了你目前正在使用的 HBM 之外？
+
+And then just as a broader question, with so much of the demand coming in these longer-term agreements being associated with data center, and just a few number of customers that can actually acquire and build these products, how are you benchmarking when you're adding capacity? Do you have an internal forecast for accelerators?
+
+那麼，從更廣泛的角度來看，由於這些長期協議中的大部分需求都與數據中心相關，而能夠實際獲取和構建這些產品的客戶卻寥寥無幾，那麼在增加容量時，你們是如何進行基準測試的呢？你們內部對加速器的發展有預測嗎？
+
+Are you talking customer by customer and building bottoms-up forecasts? Just so that you know in year three-year four, year five that you're offering enough supply to the industry and not getting into a situation. In which we're at oversupply? Thank you very much.
+
+你們是逐個客戶進行分析，並自下而上地進行預測嗎？這樣你才能知道，在第三年、第四年、第五年，你為產業提供了足夠的供應，而不會陷入困境。我們目前處於供過於求的狀態嗎？非常感謝。
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+So first of all, on your question on the SRAM and LPU-based architectures, I would just like to point out that, of course, these kind of architectures make the AI infrastructure more efficient. And any architecture that make AI infrastructure more efficient, they are good for all AI. Basically, they help the Pi grow faster.
+
+首先，關於您提出的基於 SRAM 和 LPU 的架構問題，我想指出的是，當然，這些架構能夠提高 AI 基礎架構的效率。任何能夠提高人工智慧基礎設施效率的架構，對所有人工智慧都是有益的。基本上，它們能幫助 Pi 更快成長。
+
+Keep in mind that this LPU architecture works in conjunction with Vera Rubin. Vera Rubin, which utilizes tremendous amount of HBM as well as DRAM, and the NVIDIA Groq LPX, this LPU-based architecture, actually a rack uses 12 terabyte of DRAM in it as well. So all of this actually is addressing the workloads in a more efficient manner.
+
+請記住，這種 LPU 架構與 Vera Rubin 協同工作。Vera Rubin 採用了大量的 HBM 和 DRAM，而 NVIDIA Groq LPX 採用 LPU 架構，實際上，一個機架也使用了 12 TB 的 DRAM。所以這一切其實都是為了以更有效率的方式處理工作負載。
+
+This helps with, of course, the token economics, the token speed, scale-up of AI across inference, helps with the power, and every bit that helps overall is good for further scaling up and acceleration of AI demand as well. So we look at this as complementing what already exists with respect to HVM and. DRAM and, of course, continuing to grow the FAPI and accelerate deployment of AI.
+
+這當然有助於代幣經濟、代幣速度、人工智慧在推理方面的規模化，有助於提升能力，而任何有助於整體規模化和加速人工智慧需求的因素都對人工智慧的進一步發展和加速成長有益。因此，我們認為這是對現有高價值製造（HVM）技術的補充。DRAM，當然還有FAPI的持續成長和人工智慧的加速部署。
+
+Just keep in mind that today in the enterprises, the AI deployment as a percentage is still very low. And there is across all verticals, across all industries, across the economies, there is a lot of opportunity ahead. So we are excited about all of these opportunities for our full portfolio of HVM. LP, DRAM, SOCAM and SSD in addressing these future market requirements.
+
+但請記住，目前企業中人工智慧的部署比例仍然很低。在所有垂直領域、所有產業、所有經濟體中，都存在著許多機會。因此，我們對所有這些機會感到興奮，這些機會將惠及我們所有的高價值產品組合。LP、DRAM、SOCAM 和 SSD 可滿足這些未來的市場需求。
+
+And ultimately, all of this just points to how strategic of an asset memory is for AI because without more memory, without faster memory, AI just cannot scale up, AI just cannot deliver the capabilities, whether it's in training or in inference. Just look at from last year to this year, the. DRAM requirement in the advanced AI accelerators has now doubled.
+
+歸根結底，這一切都表明了資產內存對於人工智能的戰略意義，因為如果沒有更多的內存，沒有更快的內存，人工智能就無法擴展，人工智能就無法提供所需的能力，無論是在訓練還是推理方面。看看從去年到今年的變化就知道了。先進人工智慧加速器對DRAM的需求量現在已經翻了一番。
+
+And so really -- and this is what I mean, these are some of the factors that are contributing to the supply shortage. And of course, these trends of data deployment of AI apply on the edge devices, smartphone and PCs as well. So we are excited about the opportunities ahead and really absolutely continue to see strong opportunities for our full portfolio ahead.
+
+所以，實際上——我的意思是，這些是導致供應短缺的一些因素。當然，這些人工智慧資料部署趨勢也適用於邊緣設備、智慧型手機和個人電腦。因此，我們對未來的機會感到興奮，並且確實繼續看到我們所有產品組合的強勁發展前景。
+
+Operator
+
+Operator
+
+Vivek Arya, Bofa Securities.
+
+Vivek Arya，美國銀行證券。
+
+Vivek Arya - Analyst
+
+Vivek Arya - Analyst
+
+Thanks for taking my questions. Sanjay. On HBM4, do you expect your share to be in this target 20%, 25% range right off the bat, or do you think you will kind of build towards it over time? Just conceptually, how do you see the puts and takes in terms of whether you can actually expand your HBM share in this upcoming Vera Rubin generation?
+
+謝謝您回答我的問題。桑傑。在 HBM4 上，您預計您的份額會立即達到 20%、25% 的目標範圍，還是您認為您會隨著時間的推移逐步實現這一目標？從概念上講，您如何看待即將到來的 Vera Rubin 世代產品中，您能否真正擴大 HBM 的市場份額？
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+We have shared before that in CQ3 of last year, we reached our HBM target, which we have targeted for calendar '26 to bring our HBM share in line with DRAM share. And we had also said that going forward, we are going to manage our HBM as part of the mix of our total portfolio and are not going to break out the share quarter by quarter here.
+
+我們之前分享過，在去年第三季度，我們實現了 HBM 目標，我們的目標是在 2026 年使 HBM 的份額與 DRAM 的份額保持一致。我們也曾表示，今後我們將把 HBM 作為我們整體投資組合的一部分進行管理，而不會按季度單獨列出份額。
+
+But what I can tell you is that we feel very good about our HBM product positioning, feel very good about overall HBM product. Of course, the market is there for both HBM. HBM4 as well as HBM3E in calendar 2026, and we will be supplying both of these products and feel good about our overall position here and our ability to fully manage the mix of the business.
+
+但我可以告訴你們的是，我們對 HBM 產品的定位非常滿意，對 HBM 產品整體也非常滿意。當然，HBM 和 HBM 都有市場。HBM4 和 HBM3E 將於 2026 年上市，我們將供應這兩種產品，並對我們目前的整體地位以及全面管理業務組合的能力感到滿意。
+
+Vivek Arya - Analyst
+
+Vivek Arya - Analyst
+
+And for my follow-up, Mark, I wanted to revisit this 81% gross margin guidance. I appreciate you're not giving a specific forward view, but what has happened in kind of prior historical peaks where Micron's margins, I think, peaked in the low 60s, I believe. So what is the difference between the prior situations versus now?
+
+馬克，我的後續問題是，我想再談談81%的毛利率預期。我知道您沒有給出具體的未來展望，但之前美光利潤率達到高峰時（我認為）在 60% 左右，這是歷史高峰時期發生的事情。那麼，之前的情況與現在的情況有何不同？
+
+What are those kind of historical precedents indicated to you about how the trajectory of gross margins can be over the next several quarters? How do customers -- do customers start to react differently when they see these level of gross margins and what is a very important input their AI silicon?
+
+這些歷史先例對您而言，預示著未來幾季毛利率的走勢會是怎麼樣的？當客戶看到這樣的毛利率水準時，他們的反應會有什麼不同？人工智慧晶片最重要的輸入是什麼？
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+Sanjay Mehrotra - Chairman, President and CEO
+
+And before Mark answers that question, can I just point out that I accidentally said that we targeted to reach our HBM share in Q3 '26. Of course, I said it wrong by mistake. I meant that we had targeted to get to our HBM share in '25, and we achieved our HBM share in line with our DRAM share in Q3 of '25.
+
+在 Mark 回答這個問題之前，我先指出，我不小心說了我們的目標是在 2026 年第三季達到 HBM 份額。當然，我是無意中說錯了。我的意思是，我們的目標是在 2025 年達到 HBM 的市場份額，而我們在 2025 年第三季度實現了 HBM 的市場份額，與 DRAM 的市場份額一致。
+
+And beyond that Q3 '25, we had said we are not going to be providing any further mix of HBM share. So I just wanted to correct what I accidentally said, '26 instead of '25.
+
+除此之外，我們曾表示，在 2025 年第三季之後，我們將不再提供任何 HBM 股份組合。所以我想糾正一下我不小心說錯了，應該是「25」而不是「26」。
+
+Mark Murphy - Chief Financial Officer, Executive Vice President
+
+Mark Murphy - Chief Financial Officer, Executive Vice President
+
+Vivek, I would say that keep in mind that the industry is supply constrained, so -- and conditions will remain very tight, and that's beyond '26. So that certainly supports the near-term, medium-term pricing and we've discussed how we're working with customers to allocate best we can to their businesses and work with them on adding capacity, work with them on supply assurance, work on them with new products and so forth.
+
+維韋克，我想說的是，請記住，該行業受到供應限制，因此——而且情況將持續非常緊張，這種情況會持續到 2026 年以後。因此，這無疑對近期和中期定價起到了支撐作用。我們已經討論瞭如何與客戶合作，盡最大努力為他們的業務分配資源，並與他們合作增加產能、確保供應、開發新產品等等。
+
+I think your question about reverting to some historical mean, I think maybe that's the thing that should be revisited is we have a -- we have a situation where AI is a transformational secular driver. As Sanjay mentioned, AI requires more and higher-performance memory, and this memory helps with the.
+
+我認為你提出的關於回歸某種歷史平均值的問題，或許應該重新審視一下，因為我們現在面臨的情況是——人工智慧正在成為一種變革性的世俗驅動力。正如Sanjay所提到的，人工智慧需要更多、更高效能的內存，而這種內存有助於…
+
+Driving the token cost down, it helps lower the energy cost per token, it increases the number of tokens, it increases intelligence over all of AI, which drives harder problem sets and agent use, which drives more tokens and needs more memory. So it's become -- the margins are reflecting recognition that memory is a lot more valuable and an efficient way to monetize AI, and that's from data center to the edge.
+
+降低代幣成本有助於降低每個代幣的能源成本，增加代幣數量，提高整個人工智慧的智慧水平，從而推動更難的問題集和代理的使用，進而推動更多代幣和更多內存的需求。因此，利潤率反映出人們認識到，記憶體更有價值，是實現人工智慧貨幣化的更有效率的方式，這涵蓋了從資料中心到邊緣的各個方面。
+
+And then on top of that, we've been clear for a year or more that there are supply constraints that exist on a number of fronts that will take time. There are low inventory levels. There's declining bits per wafer on node advances, HBM trade ratio, and that's increasing. And then any new capacity really needs to be greenfield, which is a physical constraint, which takes a lot of time.
+
+此外，一年多來，我們已經明確表示，在許多方面都存在供應限制，而解決這些限制需要時間。庫存水準較低。隨著製程製程的進步，每片晶圓的位元數不斷下降，HBM 的轉換率也在上升。而且任何新增產能都必須是新建的，這是一個物理限制，需要花費大量時間。
+
+So, these are both durable factors, both the value of memory and the -- and the structural challenge of bringing on supply and we're working that both those issues. We're investing in capacity and we're also increasing R&D to continue to advance the technology and improve the value of memory. And we believe that these will help with margins over time, and I think customers are recognizing that and entering into these agreements.
+
+所以，這些都是持久的因素，包括記憶體的價值以及——以及增加供應的結構性挑戰，我們正在努力解決這兩個問題。我們正在投資產能，同時也加大研發投入，以持續推動技術發展，提高記憶體的價值。我們相信這些措施會隨著時間的推移提高利潤率，而且我認為客戶也認識到了這一點，並簽署了這些協議。
+
+Operator
+
+Operator
+
+This concludes today's call. Thank you for attending. You may now disconnect.
+
+今天的電話會議到此結束。謝謝各位的出席。您現在可以斷開連線了。
