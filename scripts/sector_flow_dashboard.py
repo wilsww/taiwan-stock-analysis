@@ -29,6 +29,7 @@ from dashboard.data import (
     load_data,
     load_trading_dates,
 )
+from dashboard.detail_view import render_stock_detail_tab
 from dashboard.helpers import (
     COLORS, DEFAULT_COLOR, INSTITUTION_MAP, UNIT_MAP, TIER_MAP, SPLIT_MAP,
 )
@@ -422,6 +423,7 @@ def main() -> None:
         tab_labels.append("🏦 券商動向")
     if params.fut_auto:
         tab_labels.append("📈 期現連動")
+    tab_labels.append("📈 個股詳查")
     tabs = st.tabs(tab_labels)
     tab1, tab2, tab3, tab4, tab5 = tabs[:5]
     tab_idx = 5
@@ -432,6 +434,9 @@ def main() -> None:
     if params.broker_auto:
         tab_idx += 1
     tab8 = tabs[tab_idx] if params.fut_auto else None
+    if params.fut_auto:
+        tab_idx += 1
+    tab9 = tabs[tab_idx]
 
     with tab1:
         render_tab1(ctx)
@@ -459,6 +464,9 @@ def main() -> None:
     if tab8 is not None:
         with tab8:
             render_tab8(ctx)
+
+    with tab9:
+        render_stock_detail_tab(ctx)
 
     render_detail(ctx)
 
