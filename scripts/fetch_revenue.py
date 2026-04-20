@@ -251,6 +251,8 @@ def main():
     parser.add_argument("--ticker", nargs="+", default=list(COMPANY_NAMES.keys()),
                         help="股票代碼列表（預設全部）")
     parser.add_argument("--manual", action="store_true", help="強制手動輸入模式")
+    parser.add_argument("--no-manual", action="store_true",
+                        help="自動抓取失敗時不要切到手動輸入，直接標記 failed")
     parser.add_argument("--summary", action="store_true", help="只顯示資料庫摘要")
     args = parser.parse_args()
 
@@ -271,7 +273,7 @@ def main():
             data = manual_input(ticker)
         else:
             data = search_revenue_web(ticker)
-            if data is None:
+            if data is None and not args.no_manual:
                 data = manual_input(ticker)
 
         if data:
