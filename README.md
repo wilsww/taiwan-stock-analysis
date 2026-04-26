@@ -41,8 +41,6 @@ taiwan-stock-analysis/
 │   └── revenue_YYYYMM.json    ← 每月匯出快照
 ├── docs/
 │   └── Claude_Financial_Skills_Guide.md ← Claude Code 金融 Skills 使用指南
-├── prompts/
-│   └── earnings_analysis.md   ← DRAM 財報分析 copy-paste 模板
 ├── reports/
 │   ├── deep_analysis_{ticker}_{date}.md ← 深度分析報告
 │   ├── risk_check_{date}.md   ← 風險評估報告
