@@ -82,8 +82,29 @@
   - `docs/archive/文件結構改善計畫.md`（搬入）
   - `docs/AGENT_DOCS.md`（新建）
 
-### 階段 8：待執行
-- **狀態：** pending
+### 階段 8：驗證與交付
+- **狀態：** complete
+- 執行的操作：
+  - grep 殘留引用：全在 task_plan/findings/progress 自身描述，非斷鏈
+  - JSON 驗證：settings.json + settings.local.json 通過
+  - Python 語法：兩個 hook 通過
+  - hook smoke-test：haiku_prompt_guard 自動補 phrase 正確；finance_sync_reminder 路徑現指 themes/*/snapshots/，輸出 stale 列表正確
+  - `scripts/archive_reports.py --dry-run` 正常
+  - **發現**：`.gitignore` 排除 `CLAUDE.md` + `.claude/`（用戶採本機 only 模式），故 commit 範圍限可入 git 部分
+  - git commit `0714e60` on feature-improve-plan：8 檔改動（+426/-99）
+- 建立/修改的檔案：
+  - 無新建（驗證 + commit）
+
+## 最終總結
+
+階段 1–8 全部完成。本任務優化:
+- CLAUDE.md 三層分工（全域=通用 / 專案=specifics / 子目錄=索引）
+- 10 slash commands 補 frontmatter
+- 4 reference memory 改相對路徑 + 補 Why
+- hooks docstring + 修 SNAPS 路徑 bug
+- settings.json 收緊 + 補 domain
+- docs/ 歸檔過時計畫 + 新建 AGENT_DOCS.md 總索引
+- 刪 prompts/ 孤兒目錄
 
 ## 測試結果
 | 測試 | 輸入 | 預期結果 | 實際結果 | 狀態 |

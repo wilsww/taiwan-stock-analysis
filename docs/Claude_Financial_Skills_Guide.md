@@ -155,8 +155,8 @@ claude plugin install investment-banking@financial-services-plugins
 | `scripts/run_report.py` | 主入口：整合股價 + 月營收 + 技術指標 → 日報 | `reports/YYYY-MM-DD_日報.md` | 每日 |
 | `scripts/monthly_report.py` | 月報：5步驟分析框架 + 估值三情境模板 | `reports/monthly_report_YYYYMM.md` | 每月 |
 | `scripts/export_revenue.py` | 匯出月營收資料庫為 CSV / Excel（3 工作表） | `data/revenue_tracker.xlsx` | 每月 / 季度 |
-| `Type/DRAM/build_earnings_reports.py` | 產生華邦電、Micron 季報 Word 文件（含圖表） | `.docx` 研究報告 | 季度法說後 |
-| `Type/DRAM/build_comps.py` | 記憶體產業同業比較 Excel（含顏色格式） | `comps.xlsx` | 季度估值審查 |
+| `scripts/build_earnings_reports.py` | 產生華邦電、Micron 季報 Word 文件（含圖表） | `.docx` 研究報告 | 季度法說後 |
+| `scripts/build_comps.py` | 記憶體產業同業比較 Excel（含顏色格式） | `comps.xlsx` | 季度估值審查 |
 
 ---
 
@@ -219,7 +219,7 @@ python3 scripts/monthly_report.py --month 2026-03
 #### 法說後（季報週）
 ```bash
 # Step 1：Python 產出季報底稿文件
-python3 Type/DRAM/build_earnings_reports.py
+python3 scripts/build_earnings_reports.py
 # → 輸出：華邦電 + Micron 季報 .docx（含圖表）
 
 # Step 2：把 .docx 提供給 Claude 做深度分析
@@ -227,7 +227,7 @@ python3 Type/DRAM/build_earnings_reports.py
 → /thesis            更新投資論文
 
 # Step 3：更新估值模型
-python3 Type/DRAM/build_comps.py
+python3 scripts/build_comps.py
 # → 輸出：同業比較底稿 comps.xlsx
 
 # Step 4：把 comps.xlsx 提供給 Claude
@@ -299,9 +299,9 @@ python3 scripts/export_revenue.py --format excel
 法說前 2 週  → /earnings-preview（三情境建立）
              → /catalysts（確認所有法說日期）
 法說當天     → /earnings（5 步驟完整分析）
-法說後 1 週  → python3 Type/DRAM/build_earnings_reports.py
+法說後 1 週  → python3 scripts/build_earnings_reports.py
              → /thesis（更新投資論文）
-             → python3 Type/DRAM/build_comps.py
+             → python3 scripts/build_comps.py
              → /dcf + /comps（更新加權目標價）
              → /audit-xls（驗證 Excel 模型）
 
@@ -335,7 +335,7 @@ Hyperscaler 財報  → /morning-note
 
 ### 台灣公司數據（需手動提供）
 台灣上市公司財報目前無法透過 MCP 自動拉取，需透過以下方式：
-1. **本機 PDF 財報**：`/Users/wayne/Desktop/Invest/Type/` 各子資料夾
+1. **本機 PDF 財報**：`themes/{DRAM,CPO,PCB}/filings/` 各主題資料夾
 2. **MOPS 手動查詢**：`mops.twse.com.tw`（官方月營收來源）
 3. **Web Fetch 補充**：`histock.tw`、`winvest.tw` 靜態頁面
 
@@ -368,7 +368,7 @@ Hyperscaler 財報  → /morning-note
 
 > ⚠️ **技術面警示（2026-03-29）**：兩者均跌破 MA20 / MA60，RSI 進入偏弱區，相較 3 月 17 日高點（2408: NT$271.5、2344: NT$123.5）分別回撤 **-19.1%** 與 **-25.2%**。留意是否為超跌布局機會或趨勢反轉訊號，建議搭配 `/thesis` 評估進出場邏輯。
 
-#### 關鍵財務底稿（來源：Type/DRAM/ 本機 PDF + 法說文件）
+#### 關鍵財務底稿（來源：themes/DRAM/filings/ 本機 PDF + 法說文件）
 
 **南亞科技（2408）**
 - 1B 製程：已量產；1C 目標 2027 量產

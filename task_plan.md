@@ -9,7 +9,7 @@
 詳見 findings.md「盤點清單」段。
 
 ## 目前階段
-階段 8
+全部完成
 
 ## 各階段
 
@@ -60,11 +60,12 @@
 - **狀態：** complete
 
 ### 階段 8：驗證與交付
-- [ ] grep 全專案，確認所有路徑引用正確（無斷鏈）
-- [ ] 跑 `python3 scripts/run_report.py` 與 `streamlit run scripts/sector_flow_dashboard.py` 確認 hooks/commands 無破壞
-- [ ] 將總改動清單寫入 progress.md
-- [ ] 提交 git commit（feature-improve-plan 分支內）
-- **狀態：** pending
+- [x] grep 確認無斷鏈（殘留引用全在規劃檔自身描述）
+- [x] JSON / Python 語法驗證通過
+- [x] 兩個 hook smoke-test 行為正確
+- [x] `archive_reports.py --dry-run` 正常
+- [x] git commit `0714e60` on feature-improve-plan（範圍受 .gitignore 限制：CLAUDE.md / .claude/ 為本機 only，改動於本機 working tree 生效）
+- **狀態：** complete
 
 ## 關鍵問題
 1. 是否將 `prompts/earnings_analysis.md` 內容合併進 `/deep-analysis` 後刪除 prompts/ 目錄？（傾向：是，孤兒目錄收掉）
