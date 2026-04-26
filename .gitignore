@@ -9,6 +9,7 @@
 
 # Project-local notes / config not intended for GitHub
 CLAUDE.md
+AGENTS.md
 .markdownlint.json
 .mcp.json
 

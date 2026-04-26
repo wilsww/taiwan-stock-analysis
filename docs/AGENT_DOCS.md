@@ -5,13 +5,15 @@
 
 ---
 
-## 1. Instructions（CLAUDE.md 三層）
+## 1. Instructions（CLAUDE.md 三層 + Codex 共用）
 
 | 層級 | 路徑 | 職責 |
 |------|------|------|
 | 全域 | `~/.claude/CLAUDE.md` | Subagent 路由（haiku/sonnet/opus）、`[Model - effort]` 標籤、結構化 JSON 回傳、並行工具呼叫 |
-| 專案 | `CLAUDE.md` | 投資 specifics：主題、工具紀律、按需讀取、資料來源、輸出規範、目錄結構 |
+| 專案 | `CLAUDE.md` ←→ `AGENTS.md`（symlink） | 投資 specifics：主題、工具紀律、按需讀取、資料來源、輸出規範、目錄結構。**Claude Code 與 Codex CLI 共讀此檔** |
 | 子目錄 | `research/CLAUDE.md` | research/ 索引（主檔/組合/主題速查） |
+
+> Codex 慣例讀工作目錄 `AGENTS.md`，Claude Code 讀 `CLAUDE.md`。兩者透過 symlink 指向同檔，避免雙寫漂移。`AGENTS.md` 已加入 `.gitignore`（與 CLAUDE.md 同 local-only 處理）。
 
 ---
 
