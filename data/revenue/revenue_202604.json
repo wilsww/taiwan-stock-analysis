@@ -1,5 +1,15 @@
 [
   {
+    "ticker": "2408",
+    "company": "南亞科技",
+    "year": 2026,
+    "month": 3,
+    "revenue_m": 181700.0,
+    "mom_pct": 16.42,
+    "yoy_pct": 560.04,
+    "source": "winvest.tw"
+  },
+  {
     "ticker": "2344",
     "company": "華邦電子",
     "year": 2026,
@@ -7,6 +17,136 @@
     "revenue_m": 145010.0,
     "mom_pct": 21.11,
     "yoy_pct": 91.49,
+    "source": "winvest.tw"
+  },
+  {
+    "ticker": "3363",
+    "company": "上詮光纖",
+    "year": 2026,
+    "month": 3,
+    "revenue_m": 1170.0,
+    "mom_pct": -8.39,
+    "yoy_pct": -25.71,
+    "source": "winvest.tw"
+  },
+  {
+    "ticker": "2455",
+    "company": "全新光電",
+    "year": 2026,
+    "month": 3,
+    "revenue_m": 3110.0,
+    "mom_pct": 1.14,
+    "yoy_pct": 16.64,
+    "source": "winvest.tw"
+  },
+  {
+    "ticker": "4979",
+    "company": "華星光通",
+    "year": 2026,
+    "month": 3,
+    "revenue_m": 4520.0,
+    "mom_pct": 37.01,
+    "yoy_pct": 20.18,
+    "source": "winvest.tw"
+  },
+  {
+    "ticker": "3081",
+    "company": "聯亞光電",
+    "year": 2026,
+    "month": 3,
+    "revenue_m": 3430.0,
+    "mom_pct": 18.26,
+    "yoy_pct": 89.35,
+    "source": "winvest.tw"
+  },
+  {
+    "ticker": "3105",
+    "company": "穩懋半導體",
+    "year": 2026,
+    "month": 3,
+    "revenue_m": 16490.0,
+    "mom_pct": 11.87,
+    "yoy_pct": 34.25,
+    "source": "winvest.tw"
+  },
+  {
+    "ticker": "4919",
+    "company": "新唐科技",
+    "year": 2026,
+    "month": 3,
+    "revenue_m": 31390.0,
+    "mom_pct": 31.66,
+    "yoy_pct": -6.06,
+    "source": "winvest.tw"
+  },
+  {
+    "ticker": "6442",
+    "company": "光聖",
+    "year": 2026,
+    "month": 3,
+    "revenue_m": 10130.0,
+    "mom_pct": 37.14,
+    "yoy_pct": 75.56,
+    "source": "winvest.tw"
+  },
+  {
+    "ticker": "3163",
+    "company": "波若威",
+    "year": 2026,
+    "month": 3,
+    "revenue_m": 2470.0,
+    "mom_pct": 42.29,
+    "yoy_pct": 23.67,
+    "source": "winvest.tw"
+  },
+  {
+    "ticker": "2345",
+    "company": "智邦",
+    "year": 2026,
+    "month": 3,
+    "revenue_m": 250110.0,
+    "mom_pct": 6.06,
+    "yoy_pct": 44.43,
+    "source": "winvest.tw"
+  },
+  {
+    "ticker": "6223",
+    "company": "旺矽",
+    "year": 2026,
+    "month": 3,
+    "revenue_m": 13880.0,
+    "mom_pct": 5.47,
+    "yoy_pct": 38.62,
+    "source": "winvest.tw"
+  },
+  {
+    "ticker": "3037",
+    "company": "欣興電子",
+    "year": 2026,
+    "month": 3,
+    "revenue_m": 130790.0,
+    "mom_pct": 12.75,
+    "yoy_pct": 23.27,
+    "source": "winvest.tw"
+  },
+  {
+    "ticker": "8046",
+    "company": "南亞電路板",
+    "year": 2026,
+    "month": 3,
+    "revenue_m": 42910.0,
+    "mom_pct": 35.52,
+    "yoy_pct": 39.03,
+    "source": "winvest.tw"
+  },
+  {
+    "ticker": "3189",
+    "company": "景碩科技",
+    "year": 2026,
+    "month": 3,
+    "revenue_m": 39390.0,
+    "mom_pct": 22.93,
+    "yoy_pct": 25.06,
     "source": "winvest.tw"
   }
 ]

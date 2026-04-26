@@ -15,6 +15,8 @@ sector_flow.py — 主力資金類股輪動分析
   python3 scripts/sector_flow.py --start 2026-01-01 --end 2026-04-16 --tier all --split month
 """
 
+from __future__ import annotations
+
 import argparse
 import json
 import re
@@ -116,6 +118,15 @@ def load_universe(tier: str = "ai_supply_chain") -> tuple[dict, dict, dict, str]
 
 
 # ── DB 初始化 ──────────────────────────────────────────────────
+def _ensure_daily_price_columns(conn: sqlite3.Connection) -> None:
+    """讓舊版 DB 也具備日 OHLCV 欄位。"""
+    for col in ("open", "high", "low", "volume"):
+        try:
+            conn.execute(f"ALTER TABLE daily_price ADD COLUMN {col} REAL")
+        except sqlite3.OperationalError:
+            pass
+
+
 def init_db():
     REVENUE_DIR.mkdir(parents=True, exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
@@ -145,11 +156,16 @@ def init_db():
         CREATE TABLE IF NOT EXISTS daily_price (
             ticker      TEXT NOT NULL,
             trade_date  TEXT NOT NULL,
+            open        REAL,
+            high        REAL,
+            low         REAL,
             close       REAL,
+            volume      REAL,
             updated_at  TEXT,
             PRIMARY KEY (ticker, trade_date)
         )
     """)
+    _ensure_daily_price_columns(conn)
     conn.execute("""
         CREATE INDEX IF NOT EXISTS idx_price_date
         ON daily_price(trade_date)
@@ -1317,14 +1333,71 @@ def load_prices_from_db(dates: list[str]) -> dict[tuple, float]:
     return {(r[0], r[1]): r[2] for r in rows}
 
 
+def load_daily_ohlcv(
+    ticker: str,
+    start_date: str | None = None,
+    end_date: str | None = None,
+) -> list[dict]:
+    conn = sqlite3.connect(DB_PATH)
+    query = (
+        "SELECT ticker, trade_date, open, high, low, close, volume "
+        "FROM daily_price WHERE ticker = ?"
+    )
+    params: list[str] = [ticker]
+    if start_date:
+        query += " AND trade_date >= ?"
+        params.append(start_date)
+    if end_date:
+        query += " AND trade_date <= ?"
+        params.append(end_date)
+    query += " ORDER BY trade_date"
+    rows = conn.execute(query, params).fetchall()
+    conn.close()
+    return [
+        {
+            "ticker": r[0],
+            "trade_date": r[1],
+            "open": r[2],
+            "high": r[3],
+            "low": r[4],
+            "close": r[5],
+            "volume": r[6],
+        }
+        for r in rows
+    ]
+
+
 def save_prices_to_db(rows: list[dict]):
     if not rows:
         return
     conn = sqlite3.connect(DB_PATH)
     now = datetime.now().isoformat()
     conn.executemany(
-        "INSERT OR REPLACE INTO daily_price (ticker, trade_date, close, updated_at) VALUES (?, ?, ?, ?)",
-        [(r["ticker"], r["trade_date"], r["close"], now) for r in rows],
+        """
+        INSERT INTO daily_price (
+            ticker, trade_date, close, open, high, low, volume, updated_at
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ON CONFLICT(ticker, trade_date) DO UPDATE SET
+            close = excluded.close,
+            open = COALESCE(excluded.open, daily_price.open),
+            high = COALESCE(excluded.high, daily_price.high),
+            low = COALESCE(excluded.low, daily_price.low),
+            volume = COALESCE(excluded.volume, daily_price.volume),
+            updated_at = excluded.updated_at
+        """,
+        [
+            (
+                r["ticker"],
+                r["trade_date"],
+                r.get("close"),
+                r.get("open"),
+                r.get("high"),
+                r.get("low"),
+                r.get("volume"),
+                now,
+            )
+            for r in rows
+        ],
     )
     conn.commit()
     conn.close()

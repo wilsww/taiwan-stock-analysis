@@ -1,0 +1,625 @@
+# Improve Plan 0419 — 主力資金儀表板：個股詳細資訊 Tab（更新版）
+
+> 狀態：**P1、P2、P3、P4、P5、P6 已完成**
+> 目標：新增獨立 Tab「個股詳查」，輸入股票代號 → 查詢 → 顯示 K 線、量能、籌碼、五檔、新聞、延伸資訊  
+> 規劃時間區間：**5m / 10m / 30m / 40m / 1H / 4H / 1D / 1W**  
+> P1 已完成內容：Tab 9 掛載、搜尋框、`1D / 1W` K 線 + 量能、MA5/20/60、BBands、`fetch_ohlcv.py`、`daily_price` OHLCV 升級保護與共用讀取
+> P2 已完成內容：籌碼面板 B1–B4、`_fetch_chip_snapshot()`、`margin_flow` / `margin_data` fallback、broker Top 15、TDCC 摘要卡
+> P3 已完成內容：`fetch_quote.py`（MIS API + TSE/OTC 雙 channel 自動路由 + Legacy SSL adapter）、`_render_quote_book()`（成交 metrics + 五檔表 + ttl=5s 快取 + 手動 refresh），不落地
+> P4 已完成內容：`fetch_news.py`（Google News RSS + stdlib XML 解析 + `news_cache` 表 + INSERT OR IGNORE 去重 + `prune_news`）、`_render_news_feed()`（時間範圍切換 + 手動更新 + 本地時區顯示），快取 ttl=300s
+> P5 已完成內容：`fetch_intraday.py`（yfinance 5m + TSE/OTC 雙路由 + `intraday_price` 表 + INSERT OR REPLACE）、detail_view 擴 8 種 timeframe（5m/10m/30m/40m/1H/4H/1D/1W）、pandas resample（40m 用 `offset='9h'` 對齊 09:00）、rangebreaks 排除週末 + 13:30~09:00 非交易時段、UI 內建抓取按鈕
+> P6 已完成內容：`_render_extras()` 接上 E1–E7（基本卡、月營收、外資趨勢、期貨條件面板、同類股比較、技術警示、Markdown 快照匯出）、K 線圖 builder 共用化、匯出圖檔支援 Plotly → Matplotlib fallback
+> 已完成資料：`daily_price` 目前已有 **8930** 筆 `open/high/low/volume`  
+> 資料缺口註記：`2311`、`2325` 目前無官方月行情；`2301`、`2337`、`3037`、`6442` 等少數代號仍有部分歷史缺口，列入後續資料清理
+
+---
+
+## 0、目前進度摘要
+
+### 0.1 P1 實作結果
+- 已新增：`scripts/dashboard/detail_view.py`
+- 已新增：`scripts/fetch_ohlcv.py`
+- 已修改：`scripts/sector_flow_dashboard.py` 掛載第 9 個 Tab「📈 個股詳查」
+- 已修改：`scripts/sector_flow.py` 補上 `daily_price` OHLCV 升級保護、`load_daily_ohlcv()`、OHLCV upsert
+- 已回填：`ai_supply_chain` 追蹤清單 32 檔的日 OHLCV
+- 已驗證：`detail_view.py` 可讀取 `1D / 1W` OHLCV 並繪製 K 線、量能與技術指標
+
+### 0.2 P2 實作結果
+- 已修改：`scripts/dashboard/detail_view.py` 補上 `_render_chip_panel()` 與各子區塊 rendering
+- 已新增：`_fetch_chip_snapshot(ticker)`，以 `@st.cache_data(ttl=600)` 讀取籌碼快照
+- 已接上：B1 `institutional_flow`、B2 `margin_flow`（fallback `margin_data`）、B3 `broker_flow`、B4 `shareholder_distribution`
+- 已補上：broker Top 15 的占成交 % 計算（以 `daily_price.volume` 為分母）
+- 已補上：TDCC 摘要欄位 `400 張以上 / 1000 張以上 / 散戶 < 10 張`
+- 驗證原則：**僅做單檔小樣本 DB 驗證，未新增任何批次抓取**
+
+### 0.3 P2 小樣本驗證結果
+- `2301`：法人 `5` 筆、融資券 `20` 筆、分點買/賣各 `15` 筆；最新分點日為 `2026-04-18`
+- `2344`：TDCC 最新資料日 `2026-04-17`；`400 張以上 64.15%`、`1000 張以上 61.40%`、`散戶 < 10 張 18.79%`
+- `python3 -m py_compile scripts/dashboard/detail_view.py` 通過
+- bare mode 直接 import 會出現 Streamlit cache / ScriptRunContext warning，屬預期現象，不影響 dashboard 正常執行
+
+### 0.3.1 P3 實作結果（2026-04-19）
+- 已新增：`scripts/fetch_quote.py` — 純函式 `fetch_quote(ticker)`，一次帶 `tse_X|otc_X` 雙 channel 查詢 MIS API，自動取 `c` 非空的那筆
+- 已修改：`scripts/dashboard/detail_view.py` 加上 `_render_quote_book()`、`_cached_quote()`（`@st.cache_data(ttl=5)`）、`_build_quote_book_df()`，並掛到 `render_stock_detail_tab()` 在 K 線之上
+- SSL 處理：MIS 憑證缺 Subject Key Identifier，Python 3.13 OpenSSL 3.5 預設 `VERIFY_X509_STRICT` 會擋；自訂 `_TwseLegacyAdapter` 在 Session 端解除該 flag，鏈驗證仍保留
+- UI 規格：5 檔表（買量／買價／賣價／賣量），上方 metrics 顯示成交價、漲跌、今日區間、成交張數；非交易時段顯示「⏸ 尚無成交」；含手動「🔄 重新整理」清快取按鈕
+
+### 0.3.2 P3 小樣本驗證結果
+- `2330`（TSE）：成交 2030.00、漲跌 −55.00（−2.64%）、五檔買量 1416/1039/1278/824/763、賣量 105/875/675/1124/1130
+- `6488`（OTC）：路由自動辨識為 `otc`，成交 505.00、漲跌 −35.00（−6.48%）
+- `3037`（TSE）：欣興，成交 643.00、五檔正確
+- `9999`（不存在）：MIS 仍回 `rtcode=0000` 但 `c=''`，`fetch_quote()` 回 `None` → UI 顯示「查無此代號」
+- 不落地：僅記憶體快取 `ttl=5s`，符合 P3 設計
+
+### 0.3.3 P4 實作結果（2026-04-19）
+- 已新增：`scripts/fetch_news.py` — `fetch_google_news()` 純抓取、`upsert_news()` INSERT OR IGNORE 去重、`load_news()` 區間查詢、`prune_news()` 清理、`fetch_and_store()` 一次完成、`ensure_news_cache()` 自動建表
+- 已修改：`scripts/dashboard/detail_view.py` 加上 `_render_news_feed()`、`_cached_news()`（`@st.cache_data(ttl=300)`）、`_format_news_time()`，掛到 `render_stock_detail_tab()` 在籌碼面板下方
+- DB schema：`news_cache (ticker, url, title, source, published_at, summary, fetched_at)`，PK `(ticker, url)`，索引 `idx_news_ticker_time`
+- 解析策略：使用 stdlib `xml.etree.ElementTree`（不引入 `feedparser`），`pubDate` (RFC 822) → ISO8601 UTC，title 末尾「 - {來源}」自動裁掉避免重複
+- UI 規格：時間範圍 radio（24h / 7d / 30d / 全部）、手動「🔄 更新新聞」、發布時間以本地時區顯示、超連結點擊跳原站；最多 20 筆
+
+### 0.3.4 P4 小樣本驗證結果
+- `2330` 第 1 次抓取：`fetched=100, added=100, total_in_db=100`
+- `2330` 第 2 次抓取：`fetched=100, added=0`（去重正確，`(ticker, url)` PK 生效）
+- `pubDate` 解析：`Fri, 17 Apr 2026 05:43:05 GMT` → `2026-04-17T05:43:05+00:00` → UI 顯示為本地時間（UTC+8）
+- 來源欄位：直接從 `<source>` element 取得（如「Yahoo股市」「自由財經」「今周刊」「CMoney」），非用 title 切割
+
+### 0.3.5 P5 實作結果（2026-04-19）
+- 已新裝：`yfinance` 1.3.0（venv `.venv/bin/pip3 install yfinance`，附帶 curl_cffi/beautifulsoup4 等），未引入 FinMind
+- 已新增：`scripts/fetch_intraday.py` — `fetch_intraday()`（yfinance + TSE `.TW` / OTC `.TWO` 自動 fallback）、`upsert_intraday()`（INSERT OR REPLACE）、`load_intraday()`、`fetch_and_store()`、`ensure_intraday_table()`
+- 已修改：`scripts/dashboard/detail_view.py`：
+  - `TIMEFRAME_OPTIONS` 擴為 8 個：`5m / 10m / 30m / 40m / 1H / 4H / 1D / 1W`
+  - 新增 `INTRADAY_TFS` / `INTRADAY_RESAMPLE_RULE`（rule + offset 對齊 09:00）
+  - 新增 `_load_intraday_ohlcv()`：讀 5m → tz-naive → resample（40m / 4H 帶 `offset='9h'`）
+  - 新增 `_build_rangebreaks()`：日內加 `bounds=[13.5, 9], pattern='hour'`
+  - 新增 `_fetch_intraday_now()`：DB 為空時 UI 內建「📥 立刻抓取 5m（5 日）」按鈕
+  - 顯示區間切兩套：日內 `1日/5日/10日/20日/1月/全部`；日 / 週沿用舊版
+  - hovertemplate 依 tf 切日期格式 (`%m/%d %H:%M` vs `%Y-%m-%d`)
+- DB schema：`intraday_price (ticker, ts, tf, open, high, low, close, volume, updated_at)` PK `(ticker, ts, tf)`，索引 `idx_intra_ticker_ts` / `idx_intra_ts`；ts 存 ISO8601 with tz（`+08:00`），tf 僅存 `5m`（其他即時 resample）
+
+### 0.3.6 P5 小樣本驗證結果
+- yfinance API：`2330.TW` 5d/5m → 266 根；`6488.TWO` (OTC fallback) → 265 根；`9999.TW` 不存在 → empty
+- `fetch_and_store('2330', period='5d')`：`fetched=266, upserted=266, total_in_db=266`，重跑同 result（`INSERT OR REPLACE` idempotent）
+- DB schema 通過 `_load_intraday_ohlcv()` 8 種 tf 全部正確 resample：
+  - `5m=266`、`10m=136`、`30m=50`、`40m=40`（first ts `09:00:00` 確認 `offset='9h'` 對齊生效）、`1H=30`、`4H=15`
+- `1D / 1W` 仍走 `daily_price`（驗 `2408 1D = 309 筆`）
+- rangebreaks：`[{'bounds': ['sat', 'mon']}, {'bounds': [13.5, 9], 'pattern': 'hour'}]` 日內生效；日 / 週只保留週末 break
+
+### 0.3.7 P6 實作結果（2026-04-20）
+- 已修改：`scripts/dashboard/detail_view.py` 在新聞面板下方掛入 `延伸資訊（P6）` expander，入口為 `_render_extras(ticker, name, category, categories, companies, tf)`
+- 已新增：E1 `_render_basic_info_card()`，讀 `daily_price` 最新有效收盤、前一收盤、`foreign_ownership` 最新 `issued_shares / foreign_pct / remaining_pct`，顯示現價、漲跌、市值、外資持股、剩餘可投資、所屬類股
+- 已新增：E2 `_render_monthly_revenue_panel()`，讀 `monthly_revenue` 最近 12 月，以 Plotly bar + line 呈現營收（億）與 YoY%
+- 已新增：E3 `_render_foreign_ownership_panel()`，讀 `foreign_ownership` 最近 60 筆，繪製 `foreign_pct / remaining_pct` 雙線
+- 已新增：E4 `_render_futures_panel()`，僅對指定大型權值股顯示；若 `futures_oi` 空表則顯示空狀態，不自動補抓
+- 已新增：E5 `_render_peer_compare_panel()`，複用 `load_from_db()`，對同類股計算近 `5 / 20 / 60` 日三大法人累積買賣超（張）與區間漲跌%
+- 已新增：E6 `_build_technical_alerts()` / `_render_technical_alerts()`，目前提供 `MA20 / MA60` 突破與跌破、連續法人買超 / 賣超天數、近 5 日價量背離提示
+- 已新增：E7 `_export_snapshot_markdown()`，輸出至 `reports/stock_snapshot/snapshot_{ticker}_{YYYYMMDD}.md`；內容含基本卡、籌碼摘要、月營收、同類股摘要、技術警示、新聞與 base64 K 線圖
+- 圖檔匯出：優先走 `plotly` `fig.to_image()`；若 sandbox / Chrome / Kaleido 無法啟動，fallback `_build_matplotlib_chart_base64()` 產生靜態 PNG，避免快照缺圖
+- K 線圖模組整理：新增 `_enrich_price_indicators()` 與 `_build_price_chart_figure()`，讓主畫面與匯出快照共用同一套指標與視覺設定
+
+### 0.3.8 P6 小樣本驗證結果
+- `python3 -m py_compile scripts/dashboard/detail_view.py` 通過
+- bare mode smoke test：
+  - `3037`：`_load_monthly_revenue_history()` 可讀到資料，`_build_technical_alerts()` 回傳連續法人買超訊號
+  - ABF 載板同類股比較可回傳 `3037 / 8046 / 3189` 排名與近 20 日累積法人張數
+  - `_export_snapshot_markdown('3037', ..., '1D')` 可成功輸出 Markdown，且含 base64 K 線圖
+- `2330`：`foreign_ownership` 僅有單日快照時，E3 仍可正常顯示 latest 值；delta 無前值時顯示 `None`
+- 已確認限制：
+  - `futures_oi` 目前 DB 為空，因此 E4 只顯示空狀態
+  - `daily_price` 若最新數筆 `close` 為空，E1 會向後找最近有效收盤；若整段皆空則顯示無價格資料
+
+### 0.4 後續 API / 批次下載共通原則
+- **一律先做少量資料驗證，不先全量下載。**
+- 每個新 API 一律先用「**1 檔 / 1 小段期間 / 1 個來源**」測試，確認：
+  - endpoint / method / params 正確
+  - 回傳欄位 schema 正確
+  - 日期格式、market mapping、時區正確
+  - parser / cache / DB 寫入正確
+- 通過小樣本驗證後，再接 UI 與資料層整合。
+- **完整批次下載、歷史回填、cron 排程，一律放在該 phase 的最後一步。**
+
+### 0.5 後續資料補抓執行紀錄（2026-04-20）
+- 備份：執行前先建立 `data/revenue/revenue.db.bak.20260420_p6_followup`
+- 小批量驗證（先驗 API / parser）：
+  - `python3 scripts/sector_flow.py --start 2026-04-15 --end 2026-04-16 --tier all --include-qfii --include-futures --no-save`
+  - 驗證結果：
+    - `foreign_ownership` 成功新增至 `67` 筆，涵蓋 `44` 檔 ticker（`2026-04-15` 單日 QFII 成功寫入 `44` 筆）
+    - `futures_oi` 成功新增至 `12` 筆，涵蓋 `2` 個 contract、`2` 個交易日（每日 `TXF/EXF × 3` 法人 = `6` 筆）
+  - `python3 scripts/fetch_revenue.py --ticker 2408 2344 3037 --no-manual`
+  - 驗證結果：`2408 / 2344 / 3037` 皆成功更新至 `2026-03`
+- 完整補抓（驗證通過後）：
+  - `python3 scripts/sector_flow.py --start 2026-02-01 --end 2026-04-17 --tier all --include-qfii --include-futures --no-save`
+  - `python3 scripts/fetch_revenue.py --no-manual`
+- 完整補抓結果：
+  - `foreign_ownership`：`1827` 筆、`44` 檔、`44` 個交易日，區間 `2026-02-02 ~ 2026-04-16`
+  - `futures_oi`：`264` 筆、`2` 個 contract、`44` 個交易日，區間 `2026-02-02 ~ 2026-04-16`
+  - `monthly_revenue`：`32` 筆、`16` 檔；其中 `2026-03` 成功更新 `15` 檔，來源皆為 `winvest.tw`
+- 例外 / 未完成：
+  - `4977`（眾達-KY）本次自動抓取失敗，DB 仍保留既有最新值 `2026-02`（`winvest.tw`）
+  - `fetch_revenue.py` 原本自動抓失敗會直接進 `input()`；已新增 `--no-manual`，讓批量模式可安全跳過失敗標的並列入 failed 清單
+- 目前結論：P6 所需的 `QFII / futures / monthly_revenue` 已完成「先驗證、再補抓」閉環；E4 空面板問題已因 `futures_oi` 補齊而解除，僅剩 `4977` 月營收待後續人工或替代來源補抓
+
+---
+
+## 一、範圍與入口
+
+### 1.1 Tab 掛載
+- 位置：`scripts/sector_flow_dashboard.py` 建立第 9 個 Tab
+- 實際寫法：在既有 optional tabs 後 `tab_labels.append("📈 個股詳查")`
+- 呼叫：`render_stock_detail_tab(ctx)`
+
+### 1.2 查詢介面
+```python
+col1, col2, col3 = st.columns([2, 1, 3])
+ticker_input = col1.text_input("股票代號", key="detail_ticker_input", placeholder="例：2330")
+submit = col2.button("🔍 查詢", type="primary")
+tf = col3.radio("K 線週期", ["1D", "1W"],
+                horizontal=True, key="detail_tf", index=0)
+```
+- 送出後寫入 `st.session_state["detail_ticker"]`；重整 tab 時保留
+- 驗證：代號存在於 `research/stock_universe.json` 或 `daily_price` 表；否則紅色警示
+- 自動帶入公司名、類股（先以 universe 為主）
+- P1 現況：先只啟用 `1D / 1W`；`5m ~ 4H` 延後至 P5
+
+---
+
+## 二、K 線 + 量能雙圖（模組 A）
+
+### 2.1 視覺規格
+- `plotly.subplots.make_subplots(rows=2, cols=1, shared_xaxes=True, row_heights=[0.72, 0.28], vertical_spacing=0.03)`
+- 上圖：`go.Candlestick(increasing_line_color="#ef4444", decreasing_line_color="#22c55e")`（台股紅漲綠跌）
+- 下圖：`go.Bar` 量能，bar 顏色依當根漲跌（close >= open → 紅；< → 綠），透明度 0.7
+- 疊加線：MA5 / MA20 / MA60（可開關）、可選 BBands(20, 2σ)
+- X 軸：日內週期將來使用 `rangebreaks` 去除非交易時段（09:00–13:30 之外）避免空白
+- 區間選擇器：頂部小 radio「最近 1 週 / 1 月 / 3 月 / 6 月 / 1 年 / 全部」
+
+### 2.2 週期 → 預設區間映射
+| 週期 | 預設顯示區間 | 最長可載入 |
+|------|------------|----------|
+| 5m   | 最近 5 交易日 | 60 日 |
+| 10m  | 最近 10 日 | 60 日 |
+| 30m  | 最近 20 日 | 120 日 |
+| 40m  | 最近 20 日 | 120 日 |
+| 1H   | 最近 1 月 | 1 年 |
+| 4H   | 最近 3 月 | 2 年 |
+| 1D   | 最近 6 月 | 全部 |
+| 1W   | 最近 3 年 | 全部 |
+
+### 2.3 資料重採樣策略
+- **原生儲存粒度**：5m（最小單位）+ 1D
+- 10m / 30m / 40m / 1H / 4H：由 5m 用 pandas `resample(rule, label='right', closed='right').agg({"open":"first","high":"max","low":"min","close":"last","volume":"sum"})` 即時重採樣
+- 1W：由 1D 重採樣
+- 優點：DB 只存兩種粒度，節省空間；缺點：40m 需用 `40min` rule，且需處理 09:00 對齊
+
+### 2.4 技術指標
+- MA：`df["close"].rolling(n).mean()`
+- BBands：MA20 ± 2 × rolling std
+- 連續買超天數、量價背離（延伸到 P6）
+- P1 已完成：MA5 / MA20 / MA60 + BBands
+- P1 未完成：日內 `rangebreaks`、5m~4H resample、40m 對齊處理
+
+---
+
+## 三、當日籌碼面板（模組 B）
+
+### 3.1 子區塊佈局
+```
+┌─ B1 三大法人買賣超（當日 + 近 5 日迷你柱）──┬─ B2 融資融券變化 ─┐
+│  外資 / 投信 / 自營 / 合計（張 + 金額）     │  資/券餘額, 當日增減 │
+├─ B3 分點進出 Top 15 ──────────────────────┴─────────────────┤
+│  買超 Top / 賣超 Top 並排，含買張 / 賣張 / 均價 / 占成交 %      │
+├─ B4 集保分布（最新週資料） ────────────────────────────────┤
+│  >400 張大戶 %、1000 張 %、散戶（<10 張）%，對比 4 週前變化    │
+└──────────────────────────────────────────────────────────┘
+```
+
+### 3.2 資料來源（全部現有表）
+- B1：`institutional_flow`（`foreign_net` / `invest_net` / `dealer_net` / `*_value`）
+- B2：**實作以 `margin_flow` 為主，`margin_data` 為 fallback**
+  - `margin_flow`：以 `margin_balance - margin_prev`、`short_balance - short_prev` 即時計算增減
+  - `margin_data`：若舊資料仍在此表，直接讀 `margin_balance` / `margin_change` / `short_balance` / `short_change` / `margin_ratio`
+- B3：`broker_flow`（按 `ticker`, `trade_date`=最近一日，`order by net_lots desc/asc limit 15`）
+- B4：`shareholder_distribution`（取最新 `data_date`，依現有 tier schema 彙總）
+  - `400 張以上`：`tier_code` `12~15`
+  - `1000 張以上`：`tier_code` `15`
+  - `散戶 < 10 張`：`tier_code` `1~3`
+
+### 3.3 函式
+```python
+def _fetch_chip_snapshot(ticker: str) -> dict:
+    # 回傳 {
+    #   institutional: df_last5,
+    #   margin: df_last20,
+    #   broker_buy: df_top15,
+    #   broker_sell: df_top15,
+    #   broker_date: str | None,
+    #   tdcc_latest: df_summary,
+    #   tdcc_prev: df_summary,
+    # }
+```
+快取：`@st.cache_data(ttl=600)`
+
+### 3.4 P2 現況註記
+- B1 顯示為「最新日 signed 買賣超 + 近 5 日小圖」，不另外計算連續買超
+- B2 目前顯示融資 / 融券餘額與近 10 日走勢；`margin_ratio` 缺值時顯示 `—`
+- B3 目前用表格呈現買超 / 賣超 Top 15，尚未加迷你橫條
+- B4 目前以「最新一筆 vs 前一筆」比較；若 DB 只有單週資料則只顯示最新值
+
+---
+
+## 四、五檔最佳買賣（模組 C）
+
+### 4.1 資料源
+- 主要：**證交所 MIS API**  
+  `https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=tse_{ticker}.tw&json=1&delay=0`
+- 回傳欄位：`a`（賣五價）、`b`（買五價）、`f`（賣五量）、`g`（買五量）、`z`（成交價）、`y`（昨收）
+- 上櫃：`ex_ch=otc_{ticker}.tw`
+- 備援：`FinMind` `TaiwanStockRealTime`（需 token）
+
+### 4.2 呈現
+- 雙欄表格（賣五在上、買五在下），中間顯示最新成交 + 漲跌 %
+- 買量柱狀顯示（橫條，右對齊）；紅漲綠跌台股色系
+- 非交易時段（盤前 / 盤後）：顯示最後快照 + 「⏸ 非交易時段」提示
+
+### 4.3 不落地
+- 五檔資料體積大、盤後無價值；預設 `@st.cache_data(ttl=5)` 只做記憶體快取
+- 若未來要落地，表為 `quote_snapshot`，保留 24 小時內（cron 清理）
+
+---
+
+## 五、新聞面板（模組 D）
+
+### 5.1 來源優先順序
+1. **Google News RSS**  
+   `https://news.google.com/rss/search?q={ticker}+{company}&hl=zh-TW&gl=TW&ceid=TW:zh-Hant`
+2. **Yahoo Finance TW RSS**  
+   `https://tw.stock.yahoo.com/rss?s={ticker}.TW`
+3. 備援：cnyes openapi（若需要）
+
+### 5.2 資料流
+- 抓取：`fetch_news.py` 以 `feedparser` 解析 → 去重（URL）→ `INSERT OR IGNORE INTO news_cache`
+- 顯示：從 `news_cache` 依 `published_at DESC` 取 20 筆
+- 刷新按鈕：`st.button("🔄 更新新聞")` → 呼叫 fetch
+
+### 5.3 呈現
+```text
+📰 2026-04-18 14:23 | 經濟日報
+   [台積電 3 奈米良率超預期，Q2 出貨上修](https://...)
+```
+- `st.markdown` 含超連結（`target="_blank"` 透過 HTML）
+- 可選過濾「最近 24h / 7d / 30d」
+
+---
+
+## 六、延伸資訊（模組 E，可折疊 expander）
+
+### E1 基本資料卡
+- 來源：`daily_price`（現價 / 漲跌）+ `foreign_ownership`（外資% / 剩餘%）+ universe（類股 / 產業）
+- 卡片指標：現價、漲跌、市值（= 現價 × `issued_shares`）、外資持股%、剩餘%、所屬類股
+
+### E2 月營收迷你圖
+- 來源：`monthly_revenue` 最近 12 月
+- Plotly bar：營收柱 + YoY 線雙軸
+
+### E3 外資持股比趨勢
+- 來源：`foreign_ownership`，最近 60 日 `foreign_pct` / `remaining_pct` 雙線
+
+### E4 期貨未平倉（僅台指成分）
+- 若 `ticker` 在期貨標的清單內（寫死或 config）才顯示
+
+### E5 同類股比較
+- 取 `ticker_to_cat[ticker]` → 同類股全部代號 → 近 N 日三大法人累積買超排名表
+- 複用 `load_from_db`
+
+### E6 技術面警示
+- MA 突破 / 跌破、連續買超天數、量價背離
+- 顯示為 `st.info / warning` 卡片
+
+### E7 匯出快照
+- `st.button("📄 匯出 Markdown")` → 產出至 `reports/stock_snapshot/snapshot_{ticker}_{YYYYMMDD}.md`
+- 內容：基本卡 + 當日籌碼 + 近期新聞摘要 + K 線圖（以 base64 嵌入）
+
+---
+
+## 七、資料層變更細節
+
+### 7.1 `daily_price` 補 OHLCV
+```sql
+-- 現況：schema 已含 open / high / low / volume
+-- 程式端仍保留升級保護，避免舊 DB 缺欄位
+```
+- 本次已完成：
+  - `init_db()` 內建 `open / high / low / volume`
+  - `_ensure_daily_price_columns(conn)` 保護舊版 DB
+  - `load_daily_ohlcv(ticker, start_date, end_date)` 共用讀取函式
+  - `save_prices_to_db()` 改為 OHLCV upsert，不覆蓋既有非空欄位
+- 回填：`fetch_ohlcv.py` 抓 TWSE `STOCK_DAY` / TPEx `afterTrading/tradingStock` → 寫入 `daily_price`
+
+### 7.2 新表：`intraday_price`
+```sql
+CREATE TABLE intraday_price (
+    ticker     TEXT NOT NULL,
+    ts         TEXT NOT NULL,
+    tf         TEXT NOT NULL,
+    open       REAL,
+    high       REAL,
+    low        REAL,
+    close      REAL,
+    volume     REAL,
+    updated_at TEXT,
+    PRIMARY KEY (ticker, ts, tf)
+);
+CREATE INDEX idx_intra_ticker_ts ON intraday_price(ticker, ts);
+CREATE INDEX idx_intra_ts ON intraday_price(ts);
+```
+> 說明：只存 5m；10m / 30m / 40m / 1H / 4H 由 pandas 即時 resample。1W 由 `daily_price` resample。
+
+### 7.3 新表：`news_cache`
+```sql
+CREATE TABLE news_cache (
+    ticker        TEXT NOT NULL,
+    url           TEXT NOT NULL,
+    title         TEXT,
+    source        TEXT,
+    published_at  TEXT,
+    summary       TEXT,
+    fetched_at    TEXT,
+    PRIMARY KEY (ticker, url)
+);
+CREATE INDEX idx_news_ticker_time ON news_cache(ticker, published_at DESC);
+```
+
+### 7.4 不新增：五檔
+- 維持記憶體快取（ttl=5）；若未來要落地再加 `quote_snapshot`
+
+### 7.5 體積估算（僅追蹤清單 ~40 檔）
+- 5m：每日約 54 根 × 40 檔 × 1 年 ≈ **54 萬 rows**
+- OHLCV 回填 `daily_price`：行數不變，只增欄位
+
+---
+
+## 八、抓取腳本細節
+
+### 8.0 後續 API 驗證 / 批次下載原則
+- 新 API 一律先做小樣本驗證：
+  - `fetch_intraday.py`：先 1 檔、1 日、1 種 interval
+  - `fetch_quote.py`：先 1 檔、1 次即時快照
+  - `fetch_news.py`：先 1 檔、1 個來源
+- 小樣本驗證通過後，才接完整 parser / UI / DB。
+- **完整下載、回填歷史資料、批次抓取、cron 排程都放在最後一步。**
+
+### 8.1 `scripts/fetch_ohlcv.py`
+- 輸入：`--ticker 2330 2454 ...` 或讀 `追蹤標的清單`
+- 來源一：TWSE `STOCK_DAY`
+- 來源二：TPEx `POST https://www.tpex.org.tw/www/zh-tw/afterTrading/tradingStock`
+- 邏輯：最近 N 個月逐月抓 → 解析 → upsert `daily_price` 更新 `open/high/low/volume`
+- 速率：目前預設 sleep，可依官方穩定度再調整
+- 本次驗證流程：
+  1. 先用單檔單月驗證 TWSE / TPEx endpoint、欄位、日期格式
+  2. 確認 parser 與 DB 寫入正常
+  3. 最後才執行追蹤清單批次回填
+
+### 8.2 `scripts/fetch_intraday.py`
+- 來源候選（需測試）：
+  1. **yfinance**：`yf.Ticker("2330.TW").history(period="60d", interval="5m")`
+  2. **FinMind** `TaiwanStockPriceTick` / `TaiwanStockPrice5Second` 聚合
+  3. **TWSE** 盤中逐筆成交（若需自建）
+- MVP 先試 yfinance；不穩則改 FinMind
+- 寫入 `intraday_price`，重跑用 `INSERT OR REPLACE`
+- 建議 cron：每日收盤後抓當日
+- 實作原則：先抓 **1 檔、1 天** 驗證欄位與時區，再做小批次，最後才做完整追蹤清單回填
+
+### 8.3 `scripts/fetch_quote.py`
+- 即時五檔：不落地，純函式 `fetch_quote(ticker) -> dict`
+- 由 `detail_view.py` 直接呼叫 + Streamlit cache
+- 實作原則：先驗證 **1 檔盤中 / 1 檔非交易時段**，確認欄位 `a / b / f / g / z / y` 與 market routing，再接 UI
+
+### 8.4 `scripts/fetch_news.py`
+- 輸入：`--ticker` 清單
+- 流程：對每個 ticker → 呼叫 Google News / Yahoo RSS → feedparser 解析 → `INSERT OR IGNORE INTO news_cache`
+- 清理：可選 `--prune-days 90`
+- 實作原則：先驗證 **1 檔、1 來源** 的解析與去重，再擴到雙來源，最後才做批次補抓
+
+### 8.5 `scripts/fetch_revenue.py`
+- 用途：抓指定標的最新月營收並 upsert `monthly_revenue`
+- 來源順序：`winvest.tw` → `histock.tw`
+- 2026-04-20 補充：
+  - 新增 `--no-manual`，讓自動抓取失敗時不進互動式 `input()`，直接記為 failed
+  - 適合批量驗證 / cron / agent 執行
+- 小樣本驗證：
+  - `python3 scripts/fetch_revenue.py --ticker 2408 2344 3037 --no-manual`
+- 完整補抓：
+  - `python3 scripts/fetch_revenue.py --no-manual`
+- 本次結果：16 檔中 15 檔更新到 `2026-03`；`4977` 失敗，維持 `2026-02`
+
+---
+
+## 九、UI 模組拆分（程式檔與簽名）
+
+### 9.1 `scripts/dashboard/detail_view.py`
+```python
+from typing import Optional
+import streamlit as st
+import pandas as pd
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+# 公開入口
+def render_stock_detail_tab(ctx) -> None: ...
+
+# P1 已實作
+def _render_search_bar(companies: dict[str, str]) -> tuple[Optional[str], str]: ...
+def _render_kline_volume(ticker: str, tf: str) -> None: ...
+def _apply_display_range(df: pd.DataFrame, range_label: str) -> pd.DataFrame: ...
+
+@st.cache_data(ttl=600)
+def _load_ohlcv(ticker: str, tf: str) -> pd.DataFrame: ...
+def _resample_ohlcv(df: pd.DataFrame, tf: str) -> pd.DataFrame: ...
+
+# P2 已實作
+def _render_chip_panel(ticker: str) -> None: ...
+
+# P3 已實作
+def _render_quote_book(ticker: str) -> None: ...
+
+@st.cache_data(ttl=5, show_spinner=False)
+def _cached_quote(ticker: str) -> dict | None: ...
+def _build_quote_book_df(bids: list, asks: list) -> pd.DataFrame: ...
+def _format_quote_delta(change: float | None, pct: float | None) -> str | None: ...
+
+# P4 已實作
+def _render_news_feed(ticker: str, name: str) -> None: ...
+
+@st.cache_data(ttl=300, show_spinner=False)
+def _cached_news(ticker: str, since_iso: str | None, limit: int) -> list[dict]: ...
+def _format_news_time(iso: str | None) -> str: ...
+
+# P5 已實作
+TIMEFRAME_OPTIONS = ["5m", "10m", "30m", "40m", "1H", "4H", "1D", "1W"]
+INTRADAY_TFS = {"5m", "10m", "30m", "40m", "1H", "4H"}
+INTRADAY_RESAMPLE_RULE = {...}  # rule + offset 對齊 09:00
+
+def _load_intraday_ohlcv(ticker: str, tf: str) -> pd.DataFrame: ...
+def _build_rangebreaks(tf: str) -> list[dict]: ...
+def _fetch_intraday_now(ticker: str) -> None: ...
+
+# P6 已實作
+def _render_extras(
+    ticker: str,
+    name: str,
+    category: str,
+    categories: dict[str, dict[str, str]],
+    companies: dict[str, str],
+    tf: str,
+) -> None: ...
+
+def _render_basic_info_card(ticker: str, category: str) -> None: ...
+def _render_monthly_revenue_panel(ticker: str) -> None: ...
+def _render_foreign_ownership_panel(ticker: str) -> None: ...
+def _render_futures_panel(ticker: str) -> None: ...
+def _render_peer_compare_panel(
+    ticker: str,
+    category: str,
+    categories: dict[str, dict[str, str]],
+    companies: dict[str, str],
+) -> None: ...
+def _render_technical_alerts(ticker: str) -> None: ...
+def _render_snapshot_export(
+    ticker: str,
+    name: str,
+    category: str,
+    categories: dict[str, dict[str, str]],
+    companies: dict[str, str],
+    tf: str,
+) -> None: ...
+```
+
+### 9.3 `scripts/fetch_quote.py`（P3 新增）
+```python
+# 純函式，不落地
+def fetch_quote(ticker: str, timeout: float = 5.0) -> Optional[dict]: ...
+
+@dataclass
+class QuoteLevel:
+    price: float
+    volume: int
+
+class _TwseLegacyAdapter(HTTPAdapter):
+    """TWSE 憑證缺 SKI；解除 VERIFY_X509_STRICT 但保留鏈驗證。"""
+```
+
+### 9.5 `scripts/fetch_intraday.py`（P5 新增）
+```python
+PRIMITIVE_TF = "5m"   # 只存 5m, 其他即時 resample
+
+def ensure_intraday_table(conn) -> None: ...
+
+# yfinance: TSE 用 .TW; 失敗 fallback OTC .TWO
+def yahoo_symbol(ticker: str) -> list[str]: ...
+def fetch_intraday(ticker, period="5d", interval="5m") -> pd.DataFrame: ...
+
+# Persist
+def upsert_intraday(conn, ticker, df, tf=PRIMITIVE_TF) -> int: ...   # INSERT OR REPLACE
+def load_intraday(conn, ticker, tf=PRIMITIVE_TF, since=None) -> pd.DataFrame: ...
+def fetch_and_store(ticker, period="5d") -> dict: ...
+
+# CLI
+#   python3 scripts/fetch_intraday.py --ticker 2330 --period 5d
+```
+
+### 9.4 `scripts/fetch_news.py`（P4 新增）
+```python
+# DB
+def ensure_news_cache(conn: sqlite3.Connection) -> None: ...
+
+# Fetch / parse（stdlib xml.etree, 不引 feedparser）
+def fetch_google_news(ticker: str, name: Optional[str] = None,
+                      timeout: float = 10.0) -> list[dict]: ...
+
+# Persist
+def upsert_news(conn, ticker, items) -> int: ...           # INSERT OR IGNORE 去重
+def load_news(conn, ticker, limit=20, since=None) -> list[dict]: ...
+def prune_news(conn, days: int) -> int: ...
+
+# 一次完成
+def fetch_and_store(ticker: str, name: Optional[str] = None) -> dict: ...
+
+# CLI
+#   python3 scripts/fetch_news.py --ticker 2330 --name 台積電
+#   python3 scripts/fetch_news.py --ticker 2330 --name 台積電 --prune-days 90
+```
+
+### 9.2 `sector_flow_dashboard.py` 掛載點
+- `from dashboard.tabs import render_detail`（保留現有）
+- `from dashboard.detail_view import render_stock_detail_tab`（新）
+- `tab_labels.append("📈 個股詳查")`
+- `tab9 = tabs[tab_idx]`
+- `with tab9: render_stock_detail_tab(ctx)`
+
+---
+
+## 十、Phase 拆分 + 驗收標準
+
+| Phase | 狀態 | 內容 | 驗收 |
+|-------|------|------|------|
+| **P1** | **已完成** | `daily_price` OHLCV 升級保護、`fetch_ohlcv.py`、Tab 骨架、搜尋框、`1D / 1W` K+量圖 | 多數追蹤清單標的可畫出日 / 週 K；資料庫已有 `open/high/low/volume` |
+| **P2** | **已完成** | 籌碼面板 B1–B4 | `detail_view.py` 可顯示三大法人 / 融資券 / 分點 Top / 集保；僅讀現有表，不自動補抓 |
+| **P3** | **已完成** | 五檔 + 現價（MIS API） | 盤中可見即時五檔；ttl=5s；非交易時段提示；TSE/OTC 自動路由；不存在代號正確判別 |
+| **P4** | **已完成** | `news_cache` 表 + `fetch_news.py` + 新聞面板 | 可顯示 20 則近期新聞，超連結可點；去重 PK `(ticker, url)` 生效；時區轉本地 |
+| **P5** | **已完成** | `intraday_price` 表 + `fetch_intraday.py` + 5m / 10m / 30m / 40m / 1H / 4H K 線 | 8 種 tf 全部 resample 正確；40m `offset='9h'` 對齊 09:00；日內 rangebreaks 排除非交易時段 |
+| **P6** | **已完成** | 延伸 E1–E7（基本卡、月營收、外資趨勢、期貨、同類股、技術警示、匯出快照） | expander 展開後所有面板正常；Markdown 快照可輸出且含圖 |
+
+### 10.1 後續 phase 執行順序規則
+1. 先挑 **最小 API 樣本** 驗證。
+2. 再完成 parser / cache / DB schema / UI 最小閉環。
+3. 再做小批次驗證。
+4. **完整下載 / 回填 / cron** 放最後一步。
+
+---
+
+## 十一、風險與待確認
+
+1. **日內資料源**：yfinance 對台股 5m 穩定度需實測；若不穩則改 FinMind（需 token）或自建（MIS 逐筆累積，較複雜）
+2. **MIS API 限流**：官方無明文，但過高頻率會被封 IP → ttl=5s 應安全
+3. **新聞版權**：僅存標題 + URL，點擊導向原站；不存全文
+4. **DB 體積**：5m 一年約 54 萬 rows，僅限追蹤清單，不對全市場抓
+5. **40m 週期**：pandas `resample("40min")` 會從 00:00 對齊，需自訂起點 09:00；可用 `offset="9h"` 處理
+6. **台股開盤時段**：日內 rangebreak 需排除 13:30–09:00 次日 + 週末
+7. **追蹤清單來源**：P1 先採 `ai_supply_chain` 32 檔；是否改為 `all` 或 `core list` 仍待決定，建議 config 檔控制
+8. **代號歷史變更 / 無官方月資料**：`2311`、`2325`、`2301` 等需額外確認是否應更換為新代號、排除，或補其他來源
+9. **快照匯出圖檔**：Plotly `to_image()` 在部分 sandbox / Chrome 環境可能失敗；目前已用 Matplotlib fallback 保底，但字型與視覺仍與主圖略有差異
+10. **月營收來源穩定度**：`winvest.tw / histock.tw` 對個別 KY 或冷門標的偶有缺頁；目前 `4977` 仍需後續人工補抓或改第三來源
+
+---
+
+## 十二、後續實作起點（P3 起）
+
+1. 先選定下一個 phase 的最小驗證樣本（例如：`1` 檔股票、`1` 個來源、`1` 天 / `1` 月）
+2. 只抓少量資料驗證 API、欄位與 parser
+3. 完成該 phase 的最小 UI / cache / DB 閉環
+4. 本地驗證功能正確
+5. 最後才執行完整批次下載 / 補歷史資料 / cron 設定
+
+---
+
+版本：v5（P6 + 後續補抓執行版） | 日期：2026-04-20
