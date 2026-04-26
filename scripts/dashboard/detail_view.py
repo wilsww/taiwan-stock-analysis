@@ -1420,7 +1420,7 @@ def _load_monthly_revenue_history(ticker: str, limit: int = 12) -> pd.DataFrame:
     df = df.sort_values(["year", "month"]).reset_index(drop=True)
     df["period"] = df["year"].astype(int).astype(str) + "-" + df["month"].astype(int).map(lambda value: f"{value:02d}")
     df["period_date"] = pd.to_datetime(dict(year=df["year"], month=df["month"], day=1), errors="coerce")
-    df["revenue_b"] = df["revenue_m"] / 100.0
+    df["revenue_b"] = df["revenue_m"] / 1000.0
     return df
 
 

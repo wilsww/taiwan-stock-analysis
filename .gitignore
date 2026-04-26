@@ -13,6 +13,12 @@ AGENTS.md
 .markdownlint.json
 .mcp.json
 
+# Planning files (planning-with-files-zht skill, local only)
+task_plan.md
+findings.md
+progress.md
+Plan.md
+
 # Python caches / virtualenvs
 __pycache__/
 *.py[cod]

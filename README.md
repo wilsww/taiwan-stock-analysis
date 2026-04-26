@@ -11,7 +11,9 @@
 
 ```bash
 # 1. 抓取月營收（DRAM + CPO + PCB）
-python3 scripts/fetch_revenue.py --ticker 2408 2344 3363 2455 4979 3081 3105 4919
+python3 scripts/fetch_revenue.py --ticker 2408 2344                                          # DRAM
+python3 scripts/fetch_revenue.py --ticker 3363 2455 4979 3081 3105 6442 4977 3163 2345 6223  # CPO
+python3 scripts/fetch_revenue.py --ticker 3037 8046 3189                                     # PCB 載板
 
 # 2. 產出日報
 python3 scripts/run_report.py

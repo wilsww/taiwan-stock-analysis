@@ -84,6 +84,7 @@ def fetch_intraday(ticker: str, period: str = "5d", interval: str = "5m") -> pd.
                     "Volume": "volume",
                 }
             )[["open", "high", "low", "close", "volume"]]
+            df["volume"] = df["volume"] / 1000.0
             df.index.name = "ts"
             return df
     return pd.DataFrame()
